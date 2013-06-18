@@ -10,6 +10,9 @@
  */
 class Administrator extends CActiveRecord
 {
+    //will hold the encrypted password for update actions.
+    public $initialPassword;
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -61,9 +64,9 @@ class Administrator extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'username' => 'Username',
-			'password' => 'Password',
+			'id' => Yii::t('model','ID'),
+			'username' => Yii::t('model','Nutzername'),
+			'password' => Yii::t('model','Passwort'),
 		);
 	}
 
@@ -86,4 +89,34 @@ class Administrator extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
+    public function checkPassword($password) {
+        return self::hashPassword($password ) === $this->initialPassword;
+    }
+
+    public static function hashPassword( $value )
+    {
+        return sha1($value);
+    }
+
+    public function beforeSave() {
+        $valid = !$this->hasErrors();
+
+        // in this case, we will use the old hashed password.
+        if (empty($this->password) && !empty($this->initialPassword)){
+            $this->password = $this->initialPassword;
+        }elseif( $valid && !empty($this->password) && !$this->checkPassword( $this->password )) {
+            $this->password = self::hashPassword($this->password);
+        }
+
+        return parent::beforeSave();
+    }
+
+    public function afterFind() {
+        //reset the password to null because we don't want the hash to be shown.
+        $this->initialPassword = $this->password;
+        $this->password        = NULL;
+
+        parent::afterFind();
+    }
 }

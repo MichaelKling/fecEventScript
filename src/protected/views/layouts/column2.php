@@ -16,6 +16,17 @@
 			'htmlOptions'=>array('class'=>'operations'),
 		));
 		$this->endWidget();
+
+        $this->beginWidget('zii.widgets.CPortlet', array(
+            'title'=>'Administration',
+        ));
+        $this->widget('zii.widgets.CMenu', array(
+            'items'=>array(
+                array('label'=>'Administratoren', 'url'=>array('/administrator/admin')),
+            ),
+            'htmlOptions'=>array('class'=>'operations'),
+        ));
+        $this->endWidget();
 	?>
 	</div><!-- sidebar -->
 </div>
