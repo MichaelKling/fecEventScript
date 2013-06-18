@@ -1,14 +1,9 @@
-SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
-SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
-
-
 -- -----------------------------------------------------
--- Table `fec`.`member`
+-- Table `member`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fec`.`member` ;
+DROP TABLE IF EXISTS `member` ;
 
-CREATE  TABLE IF NOT EXISTS `fec`.`member` (
+CREATE  TABLE IF NOT EXISTS `member` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(255) NOT NULL ,
   `extId` INT NULL ,
@@ -17,11 +12,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `fec`.`eventType`
+-- Table `eventType`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fec`.`eventType` ;
+DROP TABLE IF EXISTS `eventType` ;
 
-CREATE  TABLE IF NOT EXISTS `fec`.`eventType` (
+CREATE  TABLE IF NOT EXISTS `eventType` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(255) NOT NULL ,
   `description` TEXT NULL ,
@@ -31,11 +26,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `fec`.`mission`
+-- Table `mission`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fec`.`mission` ;
+DROP TABLE IF EXISTS `mission` ;
 
-CREATE  TABLE IF NOT EXISTS `fec`.`mission` (
+CREATE  TABLE IF NOT EXISTS `mission` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(255) NOT NULL ,
   `filehash` VARCHAR(45) NULL ,
@@ -45,11 +40,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `fec`.`server`
+-- Table `server`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fec`.`server` ;
+DROP TABLE IF EXISTS `server` ;
 
-CREATE  TABLE IF NOT EXISTS `fec`.`server` (
+CREATE  TABLE IF NOT EXISTS `server` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(255) NOT NULL ,
   `ip` VARCHAR(45) NULL ,
@@ -61,18 +56,18 @@ CREATE  TABLE IF NOT EXISTS `fec`.`server` (
   INDEX `fk_server_mission1_idx` (`mission_id` ASC) ,
   CONSTRAINT `fk_server_mission1`
     FOREIGN KEY (`mission_id` )
-    REFERENCES `fec`.`mission` (`id` )
+    REFERENCES `mission` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `fec`.`event`
+-- Table `event`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fec`.`event` ;
+DROP TABLE IF EXISTS `event` ;
 
-CREATE  TABLE IF NOT EXISTS `fec`.`event` (
+CREATE  TABLE IF NOT EXISTS `event` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `eventType_id` INT NOT NULL ,
   `server_id` INT NOT NULL ,
@@ -88,28 +83,28 @@ CREATE  TABLE IF NOT EXISTS `fec`.`event` (
   INDEX `fk_event_mission1_idx` (`mission_id` ASC) ,
   CONSTRAINT `fk_event_fortbildungType`
     FOREIGN KEY (`eventType_id` )
-    REFERENCES `fec`.`eventType` (`id` )
+    REFERENCES `eventType` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_server1`
     FOREIGN KEY (`server_id` )
-    REFERENCES `fec`.`server` (`id` )
+    REFERENCES `server` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_mission1`
     FOREIGN KEY (`mission_id` )
-    REFERENCES `fec`.`mission` (`id` )
+    REFERENCES `mission` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `fec`.`slotGroup`
+-- Table `slotGroup`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fec`.`slotGroup` ;
+DROP TABLE IF EXISTS `slotGroup` ;
 
-CREATE  TABLE IF NOT EXISTS `fec`.`slotGroup` (
+CREATE  TABLE IF NOT EXISTS `slotGroup` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(45) NOT NULL ,
   `event_id` INT NOT NULL ,
@@ -117,18 +112,18 @@ CREATE  TABLE IF NOT EXISTS `fec`.`slotGroup` (
   INDEX `fk_slotGroup_event1_idx` (`event_id` ASC) ,
   CONSTRAINT `fk_slotGroup_event1`
     FOREIGN KEY (`event_id` )
-    REFERENCES `fec`.`event` (`id` )
+    REFERENCES `event` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `fec`.`slot`
+-- Table `slot`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fec`.`slot` ;
+DROP TABLE IF EXISTS `slot` ;
 
-CREATE  TABLE IF NOT EXISTS `fec`.`slot` (
+CREATE  TABLE IF NOT EXISTS `slot` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(45) NOT NULL ,
   `slotGroup_id` INT NOT NULL ,
@@ -136,18 +131,18 @@ CREATE  TABLE IF NOT EXISTS `fec`.`slot` (
   INDEX `fk_slot_slotGroup1_idx` (`slotGroup_id` ASC) ,
   CONSTRAINT `fk_slot_slotGroup1`
     FOREIGN KEY (`slotGroup_id` )
-    REFERENCES `fec`.`slotGroup` (`id` )
+    REFERENCES `slotGroup` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `fec`.`serverInfo`
+-- Table `serverInfo`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fec`.`serverInfo` ;
+DROP TABLE IF EXISTS `serverInfo` ;
 
-CREATE  TABLE IF NOT EXISTS `fec`.`serverInfo` (
+CREATE  TABLE IF NOT EXISTS `serverInfo` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `server_id` INT NOT NULL ,
@@ -155,18 +150,18 @@ CREATE  TABLE IF NOT EXISTS `fec`.`serverInfo` (
   INDEX `fk_serverInfo_server1_idx` (`server_id` ASC) ,
   CONSTRAINT `fk_serverInfo_server1`
     FOREIGN KEY (`server_id` )
-    REFERENCES `fec`.`server` (`id` )
+    REFERENCES `server` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `fec`.`playerActiveItem`
+-- Table `playerActiveItem`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fec`.`playerActiveItem` ;
+DROP TABLE IF EXISTS `playerActiveItem` ;
 
-CREATE  TABLE IF NOT EXISTS `fec`.`playerActiveItem` (
+CREATE  TABLE IF NOT EXISTS `playerActiveItem` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(255) NOT NULL ,
   `serverInfo_id` INT NOT NULL ,
@@ -176,23 +171,23 @@ CREATE  TABLE IF NOT EXISTS `fec`.`playerActiveItem` (
   INDEX `fk_playerActiveItem_member1_idx` (`member_id` ASC) ,
   CONSTRAINT `fk_playerActiveItem_serverInfo1`
     FOREIGN KEY (`serverInfo_id` )
-    REFERENCES `fec`.`serverInfo` (`id` )
+    REFERENCES `serverInfo` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_playerActiveItem_member1`
     FOREIGN KEY (`member_id` )
-    REFERENCES `fec`.`member` (`id` )
+    REFERENCES `member` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `fec`.`anmeldung`
+-- Table `anmeldung`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fec`.`anmeldung` ;
+DROP TABLE IF EXISTS `anmeldung` ;
 
-CREATE  TABLE IF NOT EXISTS `fec`.`anmeldung` (
+CREATE  TABLE IF NOT EXISTS `anmeldung` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `member_id` INT NOT NULL ,
   `event_id` INT NOT NULL ,
@@ -209,38 +204,38 @@ CREATE  TABLE IF NOT EXISTS `fec`.`anmeldung` (
   INDEX `fk_anmeldung_playerActiveItem2_idx` (`lastSeen` ASC) ,
   CONSTRAINT `fk_anmeldung_member1`
     FOREIGN KEY (`member_id` )
-    REFERENCES `fec`.`member` (`id` )
+    REFERENCES `member` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_anmeldung_event1`
     FOREIGN KEY (`event_id` )
-    REFERENCES `fec`.`event` (`id` )
+    REFERENCES `event` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_anmeldung_slot1`
     FOREIGN KEY (`slot_id` )
-    REFERENCES `fec`.`slot` (`id` )
+    REFERENCES `slot` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_anmeldung_playerActiveItem1`
     FOREIGN KEY (`firstSeen` )
-    REFERENCES `fec`.`playerActiveItem` (`id` )
+    REFERENCES `playerActiveItem` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_anmeldung_playerActiveItem2`
     FOREIGN KEY (`lastSeen` )
-    REFERENCES `fec`.`playerActiveItem` (`id` )
+    REFERENCES `playerActiveItem` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `fec`.`administrator`
+-- Table `administrator`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fec`.`administrator` ;
+DROP TABLE IF EXISTS `administrator` ;
 
-CREATE  TABLE IF NOT EXISTS `fec`.`administrator` (
+CREATE  TABLE IF NOT EXISTS `administrator` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `username` VARCHAR(45) NOT NULL ,
   `password` VARCHAR(45) NOT NULL ,
@@ -250,11 +245,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `fec`.`addon`
+-- Table `addon`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fec`.`addon` ;
+DROP TABLE IF EXISTS `addon` ;
 
-CREATE  TABLE IF NOT EXISTS `fec`.`addon` (
+CREATE  TABLE IF NOT EXISTS `addon` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(100) NOT NULL ,
   `link` VARCHAR(255) NULL ,
@@ -266,11 +261,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `fec`.`event_has_addon`
+-- Table `event_has_addon`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fec`.`event_has_addon` ;
+DROP TABLE IF EXISTS `event_has_addon` ;
 
-CREATE  TABLE IF NOT EXISTS `fec`.`event_has_addon` (
+CREATE  TABLE IF NOT EXISTS `event_has_addon` (
   `event_id` INT NOT NULL ,
   `addon_id` INT NOT NULL ,
   PRIMARY KEY (`event_id`, `addon_id`) ,
@@ -278,23 +273,23 @@ CREATE  TABLE IF NOT EXISTS `fec`.`event_has_addon` (
   INDEX `fk_event_has_addon_event1_idx` (`event_id` ASC) ,
   CONSTRAINT `fk_event_has_addon_event1`
     FOREIGN KEY (`event_id` )
-    REFERENCES `fec`.`event` (`id` )
+    REFERENCES `event` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_event_has_addon_addon1`
     FOREIGN KEY (`addon_id` )
-    REFERENCES `fec`.`addon` (`id` )
+    REFERENCES `addon` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `fec`.`missionSlotGroup`
+-- Table `missionSlotGroup`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fec`.`missionSlotGroup` ;
+DROP TABLE IF EXISTS `missionSlotGroup` ;
 
-CREATE  TABLE IF NOT EXISTS `fec`.`missionSlotGroup` (
+CREATE  TABLE IF NOT EXISTS `missionSlotGroup` (
   `id` INT NOT NULL ,
   `name` VARCHAR(45) NULL ,
   `mission_id` INT NOT NULL ,
@@ -302,18 +297,18 @@ CREATE  TABLE IF NOT EXISTS `fec`.`missionSlotGroup` (
   INDEX `fk_missionSlotGroup_mission1_idx` (`mission_id` ASC) ,
   CONSTRAINT `fk_missionSlotGroup_mission1`
     FOREIGN KEY (`mission_id` )
-    REFERENCES `fec`.`mission` (`id` )
+    REFERENCES `mission` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `fec`.`missionSlot`
+-- Table `missionSlot`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fec`.`missionSlot` ;
+DROP TABLE IF EXISTS `missionSlot` ;
 
-CREATE  TABLE IF NOT EXISTS `fec`.`missionSlot` (
+CREATE  TABLE IF NOT EXISTS `missionSlot` (
   `id` INT NOT NULL ,
   `name` VARCHAR(45) NULL ,
   `missionSlotGroup_id` INT NOT NULL ,
@@ -321,18 +316,18 @@ CREATE  TABLE IF NOT EXISTS `fec`.`missionSlot` (
   INDEX `fk_missionSlot_missionSlotGroup1_idx` (`missionSlotGroup_id` ASC) ,
   CONSTRAINT `fk_missionSlot_missionSlotGroup1`
     FOREIGN KEY (`missionSlotGroup_id` )
-    REFERENCES `fec`.`missionSlotGroup` (`id` )
+    REFERENCES `missionSlotGroup` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `fec`.`server_has_addon`
+-- Table `server_has_addon`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `fec`.`server_has_addon` ;
+DROP TABLE IF EXISTS `server_has_addon` ;
 
-CREATE  TABLE IF NOT EXISTS `fec`.`server_has_addon` (
+CREATE  TABLE IF NOT EXISTS `server_has_addon` (
   `server_id` INT NOT NULL ,
   `addon_id` INT NOT NULL ,
   PRIMARY KEY (`server_id`, `addon_id`) ,
@@ -340,18 +335,13 @@ CREATE  TABLE IF NOT EXISTS `fec`.`server_has_addon` (
   INDEX `fk_server_has_addon_server1_idx` (`server_id` ASC) ,
   CONSTRAINT `fk_server_has_addon_server1`
     FOREIGN KEY (`server_id` )
-    REFERENCES `fec`.`server` (`id` )
+    REFERENCES `server` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_server_has_addon_addon1`
     FOREIGN KEY (`addon_id` )
-    REFERENCES `fec`.`addon` (`id` )
+    REFERENCES `addon` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
-
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
