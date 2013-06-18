@@ -183,11 +183,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `anmeldung`
+-- Table `registration`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `anmeldung` ;
+DROP TABLE IF EXISTS `registration` ;
 
-CREATE  TABLE IF NOT EXISTS `anmeldung` (
+CREATE  TABLE IF NOT EXISTS `registration` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `member_id` INT NOT NULL ,
   `event_id` INT NOT NULL ,
@@ -196,33 +196,33 @@ CREATE  TABLE IF NOT EXISTS `anmeldung` (
   `cancellationDate` TIMESTAMP NULL ,
   `firstSeen` INT NULL ,
   `lastSeen` INT NULL ,
-  INDEX `fk_anmeldung_member1_idx` (`member_id` ASC) ,
-  INDEX `fk_anmeldung_event1_idx` (`event_id` ASC) ,
-  INDEX `fk_anmeldung_slot1_idx` (`slot_id` ASC) ,
+  INDEX `fk_registration_member1_idx` (`member_id` ASC) ,
+  INDEX `fk_registration_event1_idx` (`event_id` ASC) ,
+  INDEX `fk_registration_slot1_idx` (`slot_id` ASC) ,
   PRIMARY KEY (`id`) ,
-  INDEX `fk_anmeldung_playerActiveItem1_idx` (`firstSeen` ASC) ,
-  INDEX `fk_anmeldung_playerActiveItem2_idx` (`lastSeen` ASC) ,
-  CONSTRAINT `fk_anmeldung_member1`
+  INDEX `fk_registration_playerActiveItem1_idx` (`firstSeen` ASC) ,
+  INDEX `fk_registration_playerActiveItem2_idx` (`lastSeen` ASC) ,
+  CONSTRAINT `fk_registration_member1`
     FOREIGN KEY (`member_id` )
     REFERENCES `member` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_anmeldung_event1`
+  CONSTRAINT `fk_registration_event1`
     FOREIGN KEY (`event_id` )
     REFERENCES `event` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_anmeldung_slot1`
+  CONSTRAINT `fk_registration_slot1`
     FOREIGN KEY (`slot_id` )
     REFERENCES `slot` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_anmeldung_playerActiveItem1`
+  CONSTRAINT `fk_registration_playerActiveItem1`
     FOREIGN KEY (`firstSeen` )
     REFERENCES `playerActiveItem` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_anmeldung_playerActiveItem2`
+  CONSTRAINT `fk_registration_playerActiveItem2`
     FOREIGN KEY (`lastSeen` )
     REFERENCES `playerActiveItem` (`id` )
     ON DELETE NO ACTION

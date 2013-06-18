@@ -17,5 +17,9 @@
 	<?php echo CHtml::encode($data->filehash); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('filename')); ?>:</b>
+	<?php echo CHtml::encode($data->filename); ?>
+	<br />
+
 
 </div>

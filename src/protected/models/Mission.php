@@ -7,9 +7,12 @@
  * @property integer $id
  * @property string $name
  * @property string $filehash
+ * @property string $filename
  *
  * The followings are the available model relations:
  * @property Event[] $events
+ * @property Missionslotgroup[] $missionslotgroups
+ * @property Server[] $servers
  */
 class Mission extends CActiveRecord
 {
@@ -39,13 +42,12 @@ class Mission extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id', 'required'),
-			array('id', 'numerical', 'integerOnly'=>true),
+			array('name', 'required'),
 			array('name', 'length', 'max'=>255),
-			array('filehash', 'length', 'max'=>45),
+			array('filehash, filename', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, filehash', 'safe', 'on'=>'search'),
+			array('id, name, filehash, filename', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -58,6 +60,8 @@ class Mission extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'events' => array(self::HAS_MANY, 'Event', 'mission_id'),
+			'missionslotgroups' => array(self::HAS_MANY, 'Missionslotgroup', 'mission_id'),
+			'servers' => array(self::HAS_MANY, 'Server', 'mission_id'),
 		);
 	}
 
@@ -70,6 +74,7 @@ class Mission extends CActiveRecord
 			'id' => 'ID',
 			'name' => 'Name',
 			'filehash' => 'Filehash',
+			'filename' => 'Filename',
 		);
 	}
 
@@ -87,6 +92,7 @@ class Mission extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('filehash',$this->filehash,true);
+		$criteria->compare('filename',$this->filename,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

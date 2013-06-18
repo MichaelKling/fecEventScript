@@ -26,6 +26,11 @@
 		<?php echo $form->textField($model,'filehash',array('size'=>45,'maxlength'=>45)); ?>
 	</div>
 
+	<div class="row">
+		<?php echo $form->label($model,'filename'); ?>
+		<?php echo $form->textField($model,'filename',array('size'=>45,'maxlength'=>45)); ?>
+	</div>
+
 	<div class="row buttons">
 		<?php echo CHtml::submitButton('Search'); ?>
 	</div>
