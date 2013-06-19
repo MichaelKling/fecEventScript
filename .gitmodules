@@ -1,0 +1,3 @@
+[submodule "src/protected/extensions/sqmparser"]
+	path = src/protected/extensions/sqmparser
+	url = git@github.com:MichaelKling/SQMParser.git
