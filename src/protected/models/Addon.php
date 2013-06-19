@@ -17,6 +17,9 @@
  */
 class Addon extends CActiveRecord
 {
+    const TYPE_MOD = 'mod';
+    const TYPE_MAP = 'map';
+    const TYPE_OTHER = 'other';
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -73,14 +76,27 @@ class Addon extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'name' => 'Name',
-			'link' => 'Link',
-			'hash' => 'Hash',
-			'shortname' => 'Shortname',
-			'type' => 'Type',
+			'id' => Yii::t('module','ID'),
+			'name' => Yii::t('module','Name'),
+			'link' => Yii::t('module','Link'),
+			'hash' => Yii::t('module','Hash'),
+			'shortname' => Yii::t('module','Kurzer Name'),
+			'type' => Yii::t('module','Typ'),
 		);
 	}
+
+    public function typeLabels() {
+        return array(
+            Addon::TYPE_MOD => Yii::t("model","Modifikation"),
+            Addon::TYPE_MAP => Yii::t("model","Karte"),
+            Addon::TYPE_OTHER => Yii::t("model","Sonstige"),
+        );
+    }
+
+    public function getTypeLabel($type) {
+        $labels = $this->typeLabels();
+        return $labels[$type];
+    }
 
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.

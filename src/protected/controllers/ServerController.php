@@ -28,7 +28,7 @@ class ServerController extends Controller
 	{
 		return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions'=>array('index','view','create','update','admin','delete'),
+                'actions'=>array('index','view','create','update','admin','delete','queryAll'),
                 'users'=>array('@'),
             ),
             array('deny',  // deny all users
@@ -135,6 +135,13 @@ class ServerController extends Controller
 			'model'=>$model,
 		));
 	}
+
+    public function actionQueryAll() {
+        Server::updateAllServer();
+        Yii::app()->user->setFlash('success', Yii::t("model","Server abgefragt"));
+
+        $this->redirect(array('admin'));
+    }
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.

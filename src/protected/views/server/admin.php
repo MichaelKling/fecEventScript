@@ -10,6 +10,7 @@ $this->breadcrumbs=array(
 $this->menu=array(
 	array('label'=>'List Server', 'url'=>array('index')),
 	array('label'=>'Create Server', 'url'=>array('create')),
+    array('label'=>'Query All Server', 'url'=>array('queryAll')),
 );
 
 Yii::app()->clientScript->registerScript('search', "
@@ -46,14 +47,32 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'filter'=>$model,
 	'columns'=>array(
 		'id',
-		'name',
+        array(
+            'name' => 'name',
+            'value' => 'CHtml::link($data->name,array("server/view", "id" => $data->id))',
+            'type' => 'raw',
+            'filter' => CHtml::activeDropDownList($model,'type', $model->typeLabels(), array('prompt' => 'All')),
+        ),
 		'ip',
-		'mission_id',
+        'port',
+        array(
+            'name' => 'type',
+            'value' => '$data->getTypeLabel($data->type)',
+            'filter' => CHtml::activeDropDownList($model,'type', $model->typeLabels(), array('prompt' => 'All')),
+        ),
+        array(
+            'name' => 'mission_id',
+            'value' => '($data->mission)?CHtml::link($data->mission->name,array("mission/view", "id" => $data->mission->id)):null',
+            'type' => 'raw',
+            'filter' => CHtml::activeDropDownList($model,'mission_id', CHtml::listData(Mission::model()->findAll(),'id', 'name'), array('prompt' => 'All'))
+        ),
 		'hostname',
 		'maxPlayer',
-		/*
-		'passwordProtected',
-		*/
+        array(
+            'name' => 'passwordProtected',
+            'value' => '($data->passwordProtected == null)?null:(($data->passwordProtected)?Yii::t("model","Ja"):Yii::t("model","Nein"))',
+            'filter' => CHtml::activeDropDownList($model,'passwordProtected', array(true => Yii::t("model","Ja"), false => Yii::t("model","Nein")), array('prompt' => 'All')),
+        ),
 		array(
 			'class'=>'CButtonColumn',
 		),

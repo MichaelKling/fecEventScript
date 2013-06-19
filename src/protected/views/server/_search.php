@@ -26,10 +26,16 @@
 		<?php echo $form->textField($model,'ip',array('size'=>45,'maxlength'=>45)); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->label($model,'mission_id'); ?>
-		<?php echo $form->textField($model,'mission_id'); ?>
-	</div>
+
+    <div class="row">
+        <?php echo $form->label($model,'port'); ?>
+        <?php echo $form->textField($model,'port',array('size'=>45,'maxlength'=>45)); ?>
+    </div>
+
+    <div class="row">
+        <?php echo $form->labelEx($model,'type'); ?>
+        <?php echo $form->dropDownList($model,'type',$model->typeLabels(),array()); ?>
+    </div>
 
 	<div class="row">
 		<?php echo $form->label($model,'hostname'); ?>

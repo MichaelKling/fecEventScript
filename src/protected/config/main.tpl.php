@@ -17,9 +17,12 @@ return array(
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
+        'application.modules.acl.components.*',
+        'application.modules.acl.models.*',
 	),
 
 	'modules'=>array(
+        'acl',
 		// uncomment the following to enable the Gii tool
 		/*'gii'=>array(
 			'class'=>'system.gii.GiiModule',
@@ -79,5 +82,6 @@ return array(
 	'params'=>array(
 		// this is used in contact page
 		'adminEmail'=>'michael.jo.kling@gmail.com',
+        'cronSecret'=>'23611742',
 	),
 );

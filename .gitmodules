@@ -1,3 +1,9 @@
 [submodule "src/protected/extensions/sqmparser"]
 	path = src/protected/extensions/sqmparser
 	url = git@github.com:MichaelKling/SQMParser.git
+[submodule "src/protected/modules/acl"]
+	path = src/protected/modules/acl
+	url = git@github.com:dispyfree/acl.git
+[submodule "src/protected/extensions/wr"]
+	path = src/protected/extensions/wr
+	url = git@github.com:yiiext/with-related-behavior.git

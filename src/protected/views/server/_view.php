@@ -17,8 +17,16 @@
 	<?php echo CHtml::encode($data->ip); ?>
 	<br />
 
+    <b><?php echo CHtml::encode($data->getAttributeLabel('port')); ?>:</b>
+    <?php echo CHtml::encode($data->port); ?>
+    <br />
+
+    <b><?php echo CHtml::encode($data->getAttributeLabel('type')); ?>:</b>
+    <?php echo CHtml::encode($data->getTypeLabel($data->type)); ?>
+    <br />
+
 	<b><?php echo CHtml::encode($data->getAttributeLabel('mission_id')); ?>:</b>
-	<?php echo CHtml::encode($data->mission_id); ?>
+	<?php echo CHtml::encode($data->mission->name); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('hostname')); ?>:</b>

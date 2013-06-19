@@ -24,9 +24,49 @@ $this->menu=array(
 		'id',
 		'name',
 		'ip',
-		'mission_id',
+        'port',
+        array(
+            'name' => 'type',
+            'value' => $model->getTypeLabel($model->type),
+        ),
+        array(
+            'name' => 'mission_id',
+            'value' => ($model->mission)?CHtml::link($model->mission->name,array("mission/view", "id" => $model->mission->id)):null,
+            'type' => 'raw',
+        ),
 		'hostname',
 		'maxPlayer',
-		'passwordProtected',
+        array(
+            'name' => 'passwordProtected',
+            'value' => ($model->passwordProtected == null)?null:(($model->passwordProtected)?Yii::t("model","Ja"):Yii::t("model","Nein")),
+        ),
 	),
 )); ?>
+<br />
+<h2>Addons</h2>
+<?php foreach($model->addons as $addon) : ?>
+<br />
+<h3><?php echo $addon->shortname; ?></h3>
+<?php $this->widget('zii.widgets.CDetailView', array(
+        'data'=>$addon,
+        'attributes'=>array(
+            'id',
+            array(
+                'name' => 'name',
+                'value' => CHtml::link($addon->name,array("addon/view", "id" => $addon->id)),
+                'type' => 'raw',
+            ),
+            array(
+                'name' => 'link',
+                'value' => CHtml::link($addon->link,$addon->link),
+                'type' => 'raw',
+            ),
+            'hash',
+            'shortname',
+            array(
+                'name' => 'type',
+                'value' => $addon->getTypeLabel($addon->type),
+            ),
+        ),
+    )); ?>
+<?php endforeach; ?>
