@@ -51,7 +51,6 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
             'name' => 'name',
             'value' => 'CHtml::link($data->name,array("server/view", "id" => $data->id))',
             'type' => 'raw',
-            'filter' => CHtml::activeDropDownList($model,'type', $model->typeLabels(), array('prompt' => 'All')),
         ),
 		'ip',
         'port',
