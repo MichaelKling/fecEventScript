@@ -47,6 +47,7 @@ class Addon extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('shortname, name', 'required'),
+            array('shortname', 'unique'),
 			array('name', 'length', 'max'=>100),
 			array('link', 'length', 'max'=>255),
 			array('hash, shortname', 'length', 'max'=>45),
@@ -80,7 +81,7 @@ class Addon extends CActiveRecord
 			'name' => Yii::t('module','Name'),
 			'link' => Yii::t('module','Link'),
 			'hash' => Yii::t('module','Hash'),
-			'shortname' => Yii::t('module','Server Name'),
+			'shortname' => Yii::t('module','Server Identifier'),
 			'type' => Yii::t('module','Typ'),
 		);
 	}

@@ -43,6 +43,7 @@ class Mission extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('name', 'required'),
+            array('name', 'unique'),
 			array('name', 'length', 'max'=>255),
 			array('filehash, filename', 'length', 'max'=>45),
 			// The following rule is used by search().

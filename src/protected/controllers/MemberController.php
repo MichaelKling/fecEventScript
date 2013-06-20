@@ -28,7 +28,7 @@ class MemberController extends Controller
 	{
 		return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions'=>array('index','view','create','update','admin','delete'),
+                'actions'=>array('index','view','create','update','admin','delete','updateMember'),
                 'users'=>array('@'),
             ),
             array('deny',  // deny all users
@@ -44,9 +44,7 @@ class MemberController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-		));
+        EQuickDlgs::render('view',array('model'=>$this->loadModel($id)));
 	}
 
 	/**
@@ -148,6 +146,12 @@ class MemberController extends Controller
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
 	}
+
+    public function actionUpdateMember()
+    {
+        $es = new EditableSaver('Member');
+        $es->update();
+    }
 
 	/**
 	 * Performs the AJAX validation.

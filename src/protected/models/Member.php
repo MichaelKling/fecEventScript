@@ -41,6 +41,7 @@ class Member extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('name', 'required'),
+            array('playername, extId', 'unique'),
 			array('extId', 'numerical', 'integerOnly'=>true),
 			array('name, playername', 'length', 'max'=>255),
 			// The following rule is used by search().

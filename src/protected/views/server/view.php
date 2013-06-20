@@ -60,12 +60,13 @@ $this->menu=array(
 <h2>Aktive Addons</h2>
 <?php $this->widget('zii.widgets.grid.CGridView', array(
     'id'=>'addon-grid',
-    'dataProvider'=>$addon->search(),
+    'dataProvider'=>$addonDataprovider,
     'filter'=>$addon,
     'columns'=>array(
         array(
-            'name'=>'id',
-            'value'=>'$data->id',
+            'name' => 'id',
+            'value' => 'CHtml::link($data->id,array("addon/view", "id" => $data->id))',
+            'type' => 'raw',
             'htmlOptions'=>array('width'=>'40px'),
         ),
         array(
@@ -76,7 +77,6 @@ $this->menu=array(
         array(
             'class' => 'editable.EditableColumn',
             'name' => 'name',
-            'headerHtmlOptions' => array('style' => 'width: 110px'),
             'editable' => array(
                 'url'        => $this->createUrl('addon/updateAddon'),
                 'placement'  => 'right',
@@ -129,31 +129,34 @@ $this->menu=array(
         ),
     ),
 )); ?>
-<!---
-<?php foreach($model->addons as $addon) : ?>
 <br />
-<h3><?php echo $addon->shortname; ?></h3>
-<?php $this->widget('zii.widgets.CDetailView', array(
-        'data'=>$addon,
-        'attributes'=>array(
-            'id',
-            array(
-                'name' => 'name',
-                'value' => CHtml::link($addon->name,array("addon/view", "id" => $addon->id)),
-                'type' => 'raw',
-            ),
-            array(
-                'name' => 'link',
-                'value' => CHtml::link($addon->link,$addon->link),
-                'type' => 'raw',
-            ),
-            'hash',
-            'shortname',
-            array(
-                'name' => 'type',
-                'value' => $addon->getTypeLabel($addon->type),
+<h2>Aktive Spieler</h2>
+<?php $this->widget('zii.widgets.grid.CGridView', array(
+    'id'=>'addon-grid',
+    'dataProvider'=>$memberDataprovider,
+    'filter'=>$member,
+    'columns'=>array(
+        array(
+            'name' => 'id',
+            'value' => 'CHtml::link($data->id,array("member/view", "id" => $data->id))',
+            'type' => 'raw',
+        ),
+        'playername',
+        array(
+            'class' => 'editable.EditableColumn',
+            'name' => 'name',
+            'editable' => array(
+                'url'        => $this->createUrl('member/updateMember'),
+                'placement'  => 'right',
             ),
         ),
-    )); ?>
-<?php endforeach; ?>
---->
+        array(
+            'class' => 'editable.EditableColumn',
+            'name' => 'extId',
+            'editable' => array(
+                'url'        => $this->createUrl('member/updateMember'),
+                'placement'  => 'right',
+            ),
+        ),
+    ),
+)); ?>

@@ -44,14 +44,49 @@ class ServerController extends Controller
 	 */
 	public function actionView($id)
 	{
+        $model = $this->loadModel($id);
+
+        $addonIds = array();
+        foreach ($model->addons as $addon) {
+            $addonIds[] = $addon->id;
+        }
+
+
         $addon=new Addon('search');
         $addon->unsetAttributes();  // clear any default values
         if(isset($_GET['Addon']))
             $addon->attributes=$_GET['Addon'];
 
+        $addonDataprovider = $addon->search();
+        $criteria = $addonDataprovider->getCriteria();
+        $criteria->addInCondition('id',$addonIds);
+        $addonDataprovider->setCriteria($criteria);
+
+        $memberIds = array();
+        if (!empty($model->lastServerInfo)) {
+            foreach ($model->lastServerInfo[0]->playeractiveitems as $playerActiveItem) {
+                if ($playerActiveItem->member_id) {
+                    $memberIds[] = $playerActiveItem->member_id;
+                }
+            }
+        }
+
+        $member=new Member('search');
+        $member->unsetAttributes();  // clear any default values
+        if(isset($_GET['Member']))
+            $member->attributes=$_GET['Member'];
+
+        $memberDataprovider = $member->search();
+        $criteria = $memberDataprovider->getCriteria();
+        $criteria->addInCondition('id',$memberIds);
+        $memberDataprovider->setCriteria($criteria);
+
 		$this->render('view',array(
-			'model'=>$this->loadModel($id),
+			'model'=> $model,
             'addon' => $addon,
+            'addonDataprovider' => $addonDataprovider,
+            'member' => $member,
+            'memberDataprovider' => $memberDataprovider,
 		));
 	}
 

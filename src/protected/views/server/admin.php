@@ -45,7 +45,12 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'dataProvider'=>$dataProvider,
 	'filter'=>$model,
 	'columns'=>array(
-		'id',
+        array(
+            'name' => 'id',
+            'value' => 'CHtml::link($data->id,array("server/view", "id" => $data->id))',
+            'type' => 'raw',
+            'htmlOptions'=>array('width'=>'40px'),
+        ),
         array(
             'name' => 'name',
             'value' => 'CHtml::link($data->name,array("server/view", "id" => $data->id))',
