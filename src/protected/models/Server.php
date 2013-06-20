@@ -135,7 +135,14 @@ class Server extends CActiveRecord
 		$criteria->compare('mission_id',$this->mission_id);
 		$criteria->compare('hostname',$this->hostname,true);
 		$criteria->compare('maxPlayer',$this->maxPlayer);
-		$criteria->compare('passwordProtected',$this->passwordProtected);
+        if ($this->passwordProtected == null) {
+            $criteria->compare('passwordProtected',null);
+        } else if ($this->passwordProtected) {
+            $criteria->compare('passwordProtected','>0');
+        } else {
+            $criteria->compare('passwordProtected',0);
+        }
+
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

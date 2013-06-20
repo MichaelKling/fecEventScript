@@ -26,7 +26,7 @@
     <br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('mission_id')); ?>:</b>
-	<?php echo CHtml::encode($data->mission->name); ?>
+	<?php echo CHtml::encode(($data->mission)?$data->mission->name:null); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('hostname')); ?>:</b>
@@ -38,7 +38,7 @@
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('passwordProtected')); ?>:</b>
-	<?php echo CHtml::encode($data->passwordProtected); ?>
+	<?php echo CHtml::encode(($data->passwordProtected == null)?null:(($data->passwordProtected)?Yii::t("model","Ja"):Yii::t("model","Nein"))); ?>
 	<br />
 
 
