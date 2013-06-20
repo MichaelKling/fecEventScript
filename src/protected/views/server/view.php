@@ -30,6 +30,10 @@ $this->menu=array(
             'value' => $model->getTypeLabel($model->type),
         ),
         array(
+            'name' => 'country',
+            'value' => ($model->country)?Countries::getCountry($model->country):null,
+        ),
+        array(
             'name' => 'mission_id',
             'value' => ($model->mission)?CHtml::link($model->mission->name,array("mission/view", "id" => $model->mission->id)):null,
             'type' => 'raw',

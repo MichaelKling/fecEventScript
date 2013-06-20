@@ -39,6 +39,11 @@
         <?php echo $form->error($model,'type'); ?>
     </div>
 
+    <div class="row">
+        <?php echo $form->labelEx($model,'country'); ?>
+        <?php echo $form->dropDownList($model,'country',Countries::getCountries(),array('prompt' => Yii::t('model','Land auswählen'))); ?>
+        <?php echo $form->error($model,'country'); ?>
+    </div>
 
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>

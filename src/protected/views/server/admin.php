@@ -41,7 +41,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 )); ?>
 </div><!-- search-form -->
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+<?php  $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'server-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
@@ -57,20 +57,25 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
         array(
             'name' => 'type',
             'value' => '$data->getTypeLabel($data->type)',
-            'filter' => CHtml::activeDropDownList($model,'type', $model->typeLabels(), array('prompt' => 'All')),
+            'filter' => CHtml::activeDropDownList($model,'type', $model->typeLabels(), array('prompt' => Yii::t('model','Alle'))),
+        ),
+        array(
+            'name' => 'country',
+            'value' => '($data->country)?Countries::getCountry($data->country):null',
+            'filter' => CHtml::activeDropDownList($model,'country', Countries::getCountries(), array('prompt' => Yii::t('model','Alle'))),
         ),
         array(
             'name' => 'mission_id',
             'value' => '($data->mission)?CHtml::link($data->mission->name,array("mission/view", "id" => $data->mission->id)):null',
             'type' => 'raw',
-            'filter' => CHtml::activeDropDownList($model,'mission_id', CHtml::listData(Mission::model()->findAll(),'id', 'name'), array('prompt' => 'All'))
+            'filter' => CHtml::activeDropDownList($model,'mission_id', CHtml::listData(Mission::model()->findAll(),'id', 'name'), array('prompt' => Yii::t('model','Alle')))
         ),
 		'hostname',
 		'maxPlayer',
         array(
             'name' => 'passwordProtected',
             'value' => '($data->passwordProtected == null)?null:(($data->passwordProtected)?Yii::t("model","Ja"):Yii::t("model","Nein"))',
-            'filter' => CHtml::activeDropDownList($model,'passwordProtected', array(true => Yii::t("model","Ja"), false => Yii::t("model","Nein")), array('prompt' => 'All')),
+            'filter' => CHtml::activeDropDownList($model,'passwordProtected', array(true => Yii::t("model","Ja"), false => Yii::t("model","Nein")), array('prompt' => Yii::t('model','Alle'))),
         ),
 		array(
 			'class'=>'CButtonColumn',

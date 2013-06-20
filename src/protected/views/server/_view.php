@@ -25,6 +25,10 @@
     <?php echo CHtml::encode($data->getTypeLabel($data->type)); ?>
     <br />
 
+    <b><?php echo CHtml::encode($data->getAttributeLabel('country')); ?>:</b>
+    <?php echo CHtml::encode(($data->country)?Countries::getCountry($data->country):null); ?>
+    <br />
+
 	<b><?php echo CHtml::encode($data->getAttributeLabel('mission_id')); ?>:</b>
 	<?php echo CHtml::encode(($data->mission)?$data->mission->name:null); ?>
 	<br />

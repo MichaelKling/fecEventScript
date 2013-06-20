@@ -14,6 +14,7 @@
  */
 class ServerInfo extends CActiveRecord
 {
+    const MAX_TIMEFRAME = 3600;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -41,10 +42,10 @@ class ServerInfo extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('date, server_id', 'required'),
-			array('server_id', 'numerical', 'integerOnly'=>true),
+			array('server_id, timeframe', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, date, server_id', 'safe', 'on'=>'search'),
+			array('id, date, timeframe, server_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,6 +58,7 @@ class ServerInfo extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'playeractiveitems' => array(self::HAS_MANY, 'Playeractiveitem', 'serverInfo_id'),
+            'playercount'=>array(self::STAT, 'Playeractiveitem', 'serverInfo_id'),
 			'server' => array(self::BELONGS_TO, 'Server', 'server_id'),
 		);
 	}
@@ -67,9 +69,11 @@ class ServerInfo extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'date' => 'Date',
-			'server_id' => 'Server',
+			'id' => Yii::t('model','ID'),
+			'date' => Yii::t('model','Date'),
+            'timeframe' => Yii::t('model','Gebuchte Zeit'),
+			'server_id' => Yii::t('model','Server'),
+            'playercount' => Yii::t('model','Spielerzahl'),
 		);
 	}
 
@@ -85,6 +89,7 @@ class ServerInfo extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
+        $criteria->compare('timeframe',$this->timeframe);
 		$criteria->compare('date',$this->date,true);
 		$criteria->compare('server_id',$this->server_id);
 

@@ -59,13 +59,14 @@ class Server extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name', 'required'),
+			array('name, ip, port, type', 'required'),
 			array('mission_id, maxPlayer, passwordProtected, port', 'numerical', 'integerOnly'=>true),
 			array('name, hostname', 'length', 'max'=>255),
 			array('ip, type', 'length', 'max'=>45),
+            array('country', 'length', 'max'=>3),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, ip, port, type, mission_id, hostname, maxPlayer, passwordProtected', 'safe', 'on'=>'search'),
+			array('id, name, ip, port, type, country, mission_id, hostname, maxPlayer, passwordProtected', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -81,6 +82,7 @@ class Server extends CActiveRecord
 			'mission' => array(self::BELONGS_TO, 'Mission', 'mission_id'),
 			'addons' => array(self::MANY_MANY, 'Addon', 'server_has_addon(server_id, addon_id)'),
 			'serverinfos' => array(self::HAS_MANY, 'Serverinfo', 'server_id'),
+            'lastServerInfo'=>array(self::HAS_MANY, 'Serverinfo', 'server_id', 'order' => 'lastServerInfo.date DESC', 'limit' => 1),
 		);
 	}
 
@@ -95,6 +97,7 @@ class Server extends CActiveRecord
 			'ip' => Yii::t('module','IP'),
             'port' => Yii::t('module','Port'),
             'type' => Yii::t('module','Typ'),
+            'country' => Yii::t('module','Land'),
 			'mission_id' => Yii::t('module','Mission'),
 			'hostname' => Yii::t('module','Hostname'),
 			'maxPlayer' => Yii::t('module','Max. Spielerzahl'),
@@ -132,6 +135,7 @@ class Server extends CActiveRecord
 		$criteria->compare('ip',$this->ip,true);
         $criteria->compare('port',$this->port);
         $criteria->compare('type',$this->type,true);
+        $criteria->compare('country',$this->country,true);
 		$criteria->compare('mission_id',$this->mission_id);
 		$criteria->compare('hostname',$this->hostname,true);
 		$criteria->compare('maxPlayer',$this->maxPlayer);
@@ -171,7 +175,7 @@ class Server extends CActiveRecord
 
     public static function updateAllServer() {
         Yii::import('ext.gameq.GameQ');
-        $servers = Server::model()->with('mission','addons')->findAll();
+        $servers = Server::model()->with('mission','addons','lastServerInfo')->findAll();
         $serversConf = array();
         $serverList = array();
         foreach($servers as $server) {
@@ -259,9 +263,26 @@ class Server extends CActiveRecord
             $this->withRelated->save(true,$relationsToSave);
         }
 
+        //Regardless of what happened, creation of an serverInfo item:
+        $serverInfo = new ServerInfo();
+        $serverInfo->server_id = $this->id;
+
+        $loggableTime = ServerInfo::MAX_TIMEFRAME;
+        $now = date('Y-m-d H:i:s');
+
+        if (!empty($this->lastServerInfo)) {
+            $diffToLast = time() - strtotime($this->lastServerInfo[0]->date);
+            if ($diffToLast < ServerInfo::MAX_TIMEFRAME) {
+                $loggableTime = $diffToLast;
+            }
+        }
+        $serverInfo->date = $now;
+        $serverInfo->timeframe = $loggableTime;
+
+        $serverInfo->save(true);
+
         /*
         player
-        $criteria->compare('mission_id',$this->mission_id);
         */
     }
 }

@@ -34,7 +34,17 @@
 
     <div class="row">
         <?php echo $form->labelEx($model,'type'); ?>
-        <?php echo $form->dropDownList($model,'type',$model->typeLabels(),array()); ?>
+        <?php echo $form->dropDownList($model,'type',$model->typeLabels(),array('prompt' => Yii::t('model','Alle'))); ?>
+    </div>
+
+    <div class="row">
+        <?php echo $form->labelEx($model,'country'); ?>
+        <?php echo $form->dropDownList($model,'country',Countries::getCountries(),array('prompt' => Yii::t('model','Alle'))); ?>
+    </div>
+
+    <div class="row">
+        <?php echo $form->label($model,'mission_id'); ?>
+        <?php echo $form->dropDownList($model,'mission_id',CHtml::listData(Mission::model()->findAll(),'id', 'name'),array('prompt' => Yii::t('model','Alle'))); ?>
     </div>
 
 	<div class="row">
@@ -48,7 +58,7 @@
 	</div>
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton('Search'); ?>
+		<?php echo CHtml::submitButton(Yii::t('model','Suche')); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

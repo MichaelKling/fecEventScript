@@ -7,6 +7,15 @@
  */
 class Countries
 {
+    public static function getCountry($code) {
+        $countries = Countries::getCountries();
+
+        if (array_key_exists($code,$countries)) {
+            return $countries[$code];
+        } else {
+            return null;
+        }
+    }
     public static function getCountries() {
         return  array(
             'AF' => Yii::t('application', "Afghanistan"),
