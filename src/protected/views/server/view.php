@@ -57,7 +57,79 @@ $this->menu=array(
 	),
 )); ?>
 <br />
-<h2>Addons</h2>
+<h2>Aktive Addons</h2>
+<?php $this->widget('zii.widgets.grid.CGridView', array(
+    'id'=>'addon-grid',
+    'dataProvider'=>$addon->search(),
+    'filter'=>$addon,
+    'columns'=>array(
+        array(
+            'name'=>'id',
+            'value'=>'$data->id',
+            'htmlOptions'=>array('width'=>'40px'),
+        ),
+        array(
+            'name'=>'shortname',
+            'value'=>'$data->shortname',
+            'htmlOptions'=>array('width'=>'150px'),
+        ),
+        array(
+            'class' => 'editable.EditableColumn',
+            'name' => 'name',
+            'headerHtmlOptions' => array('style' => 'width: 110px'),
+            'editable' => array(
+                'url'        => $this->createUrl('addon/updateAddon'),
+                'placement'  => 'right',
+            ),
+            'htmlOptions'=>array('min-width'=>'200px'),
+        ),
+        array(
+            'class' => 'editable.EditableColumn',
+            'name' => 'type',
+            'editable' => array(
+                'type'     => 'select',
+                'url'      => $this->createUrl('addon/updateAddon'),
+                'source'   => $addon->typeLabels(),
+            ),
+            'filter' => CHtml::activeDropDownList($addon,'type', $addon->typeLabels(), array('prompt' => Yii::t('model','Alle'))),
+            'htmlOptions'=>array('width'=>'60px'),
+        ),
+        array(
+            'class'=>'EJuiDlgsColumn',
+            'buttons'=>array(
+                'view' => array(
+                    'label'=> Yii::t('model',"Anzeigen"),
+                ),
+                'update' => array(
+                    'label'=> Yii::t('model',"Bearbeiten"),
+                ),
+                'delete' => array(
+                      'visible' => 'false',
+                ),
+            ),
+            'viewDialogEnabled' => true,
+            'viewDialog'=>array(
+                'controllerRoute' => 'addon/view',
+                'actionParams' => array('id' => '$data->primaryKey'),
+                'dialogTitle' => Yii::t('model',"Ansicht"),
+                'dialogWidth' => 600,
+                'dialogHeight' => 350,
+                'closeButtonText' => Yii::t('model',"Schliessen"),
+            ),
+            'updateDialogEnabled' => true,
+            'updateDialog'=>array(
+                'controllerRoute' => 'addon/update',
+                'actionParams' => array('id' => '$data->primaryKey'),
+                'dialogTitle' => Yii::t('model',"Bearbeiten"),
+                'dialogWidth' => 600,
+                'dialogHeight' => 500,
+                'closeButtonText' => Yii::t('model',"Abbruch"),
+                'iframeHtmlOptions' => array('style' => "min-height:100%;background-color:#FFFFFF;")
+            ),
+        ),
+    ),
+)); ?>
+<!---
 <?php foreach($model->addons as $addon) : ?>
 <br />
 <h3><?php echo $addon->shortname; ?></h3>
@@ -84,3 +156,4 @@ $this->menu=array(
         ),
     )); ?>
 <?php endforeach; ?>
+--->

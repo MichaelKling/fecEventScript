@@ -44,8 +44,14 @@ class ServerController extends Controller
 	 */
 	public function actionView($id)
 	{
+        $addon=new Addon('search');
+        $addon->unsetAttributes();  // clear any default values
+        if(isset($_GET['Addon']))
+            $addon->attributes=$_GET['Addon'];
+
 		$this->render('view',array(
 			'model'=>$this->loadModel($id),
+            'addon' => $addon,
 		));
 	}
 
@@ -115,6 +121,7 @@ class ServerController extends Controller
 	 */
 	public function actionIndex()
 	{
+        $this->redirect("admin");
 		$dataProvider=new CActiveDataProvider('Server', array(
             'criteria' => array(
               'with' => array('lastServerInfo.playercount'),

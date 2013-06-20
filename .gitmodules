@@ -7,3 +7,6 @@
 [submodule "src/protected/extensions/wr"]
 	path = src/protected/extensions/wr
 	url = git@github.com:yiiext/with-related-behavior.git
+[submodule "src/protected/extensions/x-editable"]
+	path = src/protected/extensions/x-editable
+	url = git@github.com:vitalets/x-editable-yii.git

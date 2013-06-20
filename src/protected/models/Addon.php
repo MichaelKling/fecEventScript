@@ -46,7 +46,7 @@ class Addon extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name', 'required'),
+			array('shortname, name', 'required'),
 			array('name', 'length', 'max'=>100),
 			array('link', 'length', 'max'=>255),
 			array('hash, shortname', 'length', 'max'=>45),
@@ -80,7 +80,7 @@ class Addon extends CActiveRecord
 			'name' => Yii::t('module','Name'),
 			'link' => Yii::t('module','Link'),
 			'hash' => Yii::t('module','Hash'),
-			'shortname' => Yii::t('module','Kurzer Name'),
+			'shortname' => Yii::t('module','Server Name'),
 			'type' => Yii::t('module','Typ'),
 		);
 	}

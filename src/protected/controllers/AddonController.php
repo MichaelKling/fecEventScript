@@ -28,7 +28,7 @@ class AddonController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index','view','create','update','admin','delete'),
+				'actions'=>array('index','view','create','update','admin','delete','updateAddon'),
 				'users'=>array('@'),
 			),
 			array('deny',  // deny all users
@@ -43,9 +43,7 @@ class AddonController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-		));
+        EQuickDlgs::render('view',array('model'=>$this->loadModel($id)));
 	}
 
 	/**
@@ -86,13 +84,13 @@ class AddonController extends Controller
 		if(isset($_POST['Addon']))
 		{
 			$model->attributes=$_POST['Addon'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+			if($model->save()) {
+                EQuickDlgs::checkDialogJsScript();
+                $this->redirect(array('view','id'=>$model->id));
+            }
 		}
 
-		$this->render('update',array(
-			'model'=>$model,
-		));
+        EQuickDlgs::render('update',array('model'=>$model));
 	}
 
 	/**
@@ -147,6 +145,12 @@ class AddonController extends Controller
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
 	}
+
+    public function actionUpdateAddon()
+    {
+        $es = new EditableSaver('Addon');
+        $es->update();
+    }
 
 	/**
 	 * Performs the AJAX validation.

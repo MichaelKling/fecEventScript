@@ -22,10 +22,17 @@ $this->menu=array(
 	'data'=>$model,
 	'attributes'=>array(
 		'id',
+        'shortname',
 		'name',
-		'link',
+        array(
+            'name' => 'link',
+            'value' => ($model->link)?CHtml::link($model->link,$model->link):null,
+            'type' => 'raw',
+        ),
 		'hash',
-		'shortname',
-		'type',
+        array(
+            'name' => 'type',
+            'value' => $model->getTypeLabel($model->type),
+        ),
 	),
 )); ?>

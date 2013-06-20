@@ -5,6 +5,8 @@
 
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
+Yii::setPathOfAlias('editable', dirname(__FILE__).'/../extensions/x-editable');
+
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'FEC Administration',
@@ -19,6 +21,8 @@ return array(
 		'application.components.*',
         'application.modules.acl.components.*',
         'application.modules.acl.models.*',
+        'ext.quickdlgs.*',
+        'editable.*',
 	),
 
 	'modules'=>array(
@@ -75,7 +79,16 @@ return array(
 				*/
 			),
 		),
-	),
+        //X-editable config
+        'editable' => array(
+            'class'     => 'editable.EditableConfig',
+            'form'      => 'jqueryui',        //form style: 'bootstrap', 'jqueryui', 'plain'
+            'mode'      => 'inline',            //mode: 'popup' or 'inline'
+            'defaults'  => array(              //default settings for all editable elements
+                'emptytext' => Yii::t('config','Klicken zum bearbeiten'),
+            )
+        ),
+    ),
 
 	// application-level parameters that can be accessed
 	// using Yii::app()->params['paramName']

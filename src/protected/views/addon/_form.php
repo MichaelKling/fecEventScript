@@ -15,6 +15,12 @@
 
 	<?php echo $form->errorSummary($model); ?>
 
+    <div class="row">
+        <?php echo $form->labelEx($model,'shortname'); ?>
+        <?php echo $form->textField($model,'shortname',array('size'=>45,'maxlength'=>45)); ?>
+        <?php echo $form->error($model,'shortname'); ?>
+    </div>
+
 	<div class="row">
 		<?php echo $form->labelEx($model,'name'); ?>
 		<?php echo $form->textField($model,'name',array('size'=>60,'maxlength'=>100)); ?>
@@ -33,17 +39,11 @@
 		<?php echo $form->error($model,'hash'); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'shortname'); ?>
-		<?php echo $form->textField($model,'shortname',array('size'=>45,'maxlength'=>45)); ?>
-		<?php echo $form->error($model,'shortname'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'type'); ?>
-		<?php echo $form->textField($model,'type',array('size'=>5,'maxlength'=>5)); ?>
-		<?php echo $form->error($model,'type'); ?>
-	</div>
+    <div class="row">
+        <?php echo $form->labelEx($model,'type'); ?>
+        <?php echo $form->dropDownList($model,'type',$model->typeLabels(),array()); ?>
+        <?php echo $form->error($model,'type'); ?>
+    </div>
 
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
