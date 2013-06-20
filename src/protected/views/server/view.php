@@ -8,9 +8,9 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List Server', 'url'=>array('index')),
 	array('label'=>'Create Server', 'url'=>array('create')),
 	array('label'=>'Update Server', 'url'=>array('update', 'id'=>$model->id)),
+    array('label'=>'Query Server', 'url'=>array('query', 'id'=>$model->id)),
 	array('label'=>'Delete Server', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
 	array('label'=>'Manage Server', 'url'=>array('admin')),
 );
@@ -43,6 +43,16 @@ $this->menu=array(
         array(
             'name' => 'passwordProtected',
             'value' => ($model->passwordProtected == null)?null:(($model->passwordProtected)?Yii::t("model","Ja"):Yii::t("model","Nein")),
+        ),
+        array(
+            'name' => 'lastServerInfo.date',
+            'header'=> $model->getAttributeLabel('lastUpdate'),
+            'value' => (!empty($model->lastServerInfo))?$model->lastServerInfo[0]->date:null,
+        ),
+        array(
+            'name' => 'lastServerInfo.playercount',
+            'header'=> $model->getAttributeLabel('playercount'),
+            'value' => (!empty($model->lastServerInfo) && $model->lastServerInfo[0]->playercount)?$model->lastServerInfo[0]->playercount:null,
         ),
 	),
 )); ?>

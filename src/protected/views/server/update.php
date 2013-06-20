@@ -9,7 +9,6 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List Server', 'url'=>array('index')),
 	array('label'=>'Create Server', 'url'=>array('create')),
 	array('label'=>'View Server', 'url'=>array('view', 'id'=>$model->id)),
 	array('label'=>'Manage Server', 'url'=>array('admin')),

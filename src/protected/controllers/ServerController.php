@@ -28,7 +28,7 @@ class ServerController extends Controller
 	{
 		return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions'=>array('index','view','create','update','admin','delete','queryAll'),
+                'actions'=>array('index','view','create','update','admin','delete','query','queryAll'),
                 'users'=>array('@'),
             ),
             array('deny',  // deny all users
@@ -115,7 +115,11 @@ class ServerController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Server');
+		$dataProvider=new CActiveDataProvider('Server', array(
+            'criteria' => array(
+              'with' => array('lastServerInfo.playercount'),
+            ),
+        ));
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -131,10 +135,25 @@ class ServerController extends Controller
 		if(isset($_GET['Server']))
 			$model->attributes=$_GET['Server'];
 
+        $dataProvider=new CActiveDataProvider('Server', array(
+            'criteria'=>array(
+                'with' => array('lastServerInfo.playercount'),
+            ),
+        ));
 		$this->render('admin',array(
 			'model'=>$model,
+            'dataProvider' => $dataProvider,
 		));
 	}
+
+    public function actionQuery($id) {
+        $model=$this->loadModel($id);
+
+        $model->updateServer();
+        Yii::app()->user->setFlash('success', Yii::t("model","Server abgefragt"));
+
+        $this->redirect(array('server/view/'.$id));
+    }
 
     public function actionQueryAll() {
         Server::updateAllServer();
@@ -150,7 +169,7 @@ class ServerController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=Server::model()->findByPk($id);
+		$model=Server::model()->with('lastServerInfo.playercount','lastServerInfo.playeractiveitems.member','addons','mission')->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;

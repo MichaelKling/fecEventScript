@@ -29,6 +29,7 @@
         $this->widget('zii.widgets.CMenu', array(
             'items'=>array(
                 array('label'=>'Administratoren', 'url'=>array('/administrator/admin')),
+                array('label'=>'Server', 'url'=>array('/server/admin')),
             ),
             'htmlOptions'=>array('class'=>'operations'),
         ));

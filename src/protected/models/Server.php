@@ -81,8 +81,8 @@ class Server extends CActiveRecord
 			'events' => array(self::HAS_MANY, 'Event', 'server_id'),
 			'mission' => array(self::BELONGS_TO, 'Mission', 'mission_id'),
 			'addons' => array(self::MANY_MANY, 'Addon', 'server_has_addon(server_id, addon_id)'),
-			'serverinfos' => array(self::HAS_MANY, 'Serverinfo', 'server_id'),
-            'lastServerInfo'=>array(self::HAS_MANY, 'Serverinfo', 'server_id', 'order' => 'lastServerInfo.date DESC', 'limit' => 1),
+			'serverinfos' => array(self::HAS_MANY, 'ServerInfo', 'server_id', 'with' => array('playercount')),
+            'lastServerInfo'=>array(self::HAS_MANY, 'ServerInfo', 'server_id', 'order' => 'lastServerInfo.date DESC', 'limit' => 1, 'with' => array('playercount')),
 		);
 	}
 
@@ -102,6 +102,8 @@ class Server extends CActiveRecord
 			'hostname' => Yii::t('module','Hostname'),
 			'maxPlayer' => Yii::t('module','Max. Spielerzahl'),
 			'passwordProtected' => Yii::t('module','Passwort geschützt'),
+            'lastUpdate' => Yii::t('module','Letztes Update'),
+            'playercount' => Yii::t('module','Spieler'),
 		);
 	}
 
@@ -154,6 +156,7 @@ class Server extends CActiveRecord
 	}
 
     public function updateServer() {
+        Yii::import('ext.gameq.GameQ');
         $serversConf = array(
             $this->id => array($this->type, $this->ip, $this->port),
         );
@@ -193,7 +196,6 @@ class Server extends CActiveRecord
         foreach ($results as $id => $data) {
             $serverList[$id]->processServerUpdate($data);
         }
-
         return true;
     }
 
@@ -216,29 +218,38 @@ class Server extends CActiveRecord
             $this->passwordProtected = $data['gq_password'];
         }
 
-        $existingAddons = $this->addons;
-        $existingAddonsNames = array();
-        $existingAddonsIds = array();
-        foreach ($existingAddons as $addon) {
-            $existingAddonsNames[$addon->shortname] = $addon->shortname;
-            $existingAddonsIds[$addon->shortname] = $addon;
+        $oldAddons = $this->addons;
+        $oldAddonsNames = array();
+        $oldAddonsIds = array();
+        foreach ($oldAddons as $addon) {
+            $oldAddonsNames[$addon->shortname] = $addon->shortname;
+            $oldAddonsIds[$addon->shortname] = $addon;
         }
 
         $addons = explode(";",$data['gq_mod']);
-        $diff = array_diff($existingAddonsNames,$addons) + array_diff($addons,$existingAddonsNames);
+        $diff = array_diff($oldAddonsNames,$addons) + array_diff($addons,$oldAddonsNames);
         if (!empty($diff)) {
+            $existingAddons = Addon::model()->findAllByAttributes(array('shortname'=>$diff));
+
+
             $changed = true;
 
             $newAddons = array();
             foreach ($addons as $addon) {
-                if (isset($existingAddonsIds[$addon])) {
-                    $newAddons[] = $existingAddonsIds[$addon];
+                if (isset($oldAddonsIds[$addon])) {
+                    $newAddons[] = $oldAddonsIds[$addon];
                 } else {
-                    $newAddon = new Addon();
-                    $newAddon->name = $addon;
-                    $newAddon->shortname = $addon;
-                    $newAddon->type = Addon::TYPE_OTHER;
-                    $newAddons[] = $newAddon;
+                    //Is it in existing addons?
+                    $existingAddon = $this->findObjectById($existingAddons,"shortname",$addon);
+                    if ($existingAddon) {
+                        $newAddons[] = $existingAddon;
+                    } else {
+                        $newAddon = new Addon();
+                        $newAddon->name = $addon;
+                        $newAddon->shortname = $addon;
+                        $newAddon->type = Addon::TYPE_OTHER;
+                        $newAddons[] = $newAddon;
+                    }
                 }
             }
             $this->addons = $newAddons;
@@ -279,10 +290,54 @@ class Server extends CActiveRecord
         $serverInfo->date = $now;
         $serverInfo->timeframe = $loggableTime;
 
-        $serverInfo->save(true);
+        $playerNames = array();
+        if (isset($data['players']) && !empty($data['players'])) {
+            foreach ($data['players'] as $player) {
+                if (isset($player['player_'])) {
+                    $playerNames[] = $player['player_'];
+                }
+            }
+        }
 
-        /*
-        player
-        */
+        $existingPlayers = Member::model()->findAllByAttributes(array('playername'=>$playerNames));
+
+        $playerActiveItems = array();
+        foreach ($playerNames as $playerName) {
+            $player = null;
+            $existingPlayer = $this->findObjectById($existingPlayers,"playername",$playerName);
+            if ($existingPlayer !== false) {
+                $player = $existingPlayer;
+            } else {
+                $newPlayer = new Member();
+                $newPlayer->extId = null;
+                $newPlayer->name = $playerName;
+                $newPlayer->playername = $playerName;
+                $player = $newPlayer;
+            }
+
+            $playerActiveItem = new PlayerActiveItem();
+            $playerActiveItem->member = $player;
+            $playerActiveItems[] = $playerActiveItem;
+        }
+
+        if (!empty($playerActiveItems)) {
+            $serverInfo->playeractiveitems = $playerActiveItems;
+            $serverInfo->withRelated->save(false,array('playeractiveitems' => array('member')));
+        } else {
+            $serverInfo->save(true);
+        }
+    }
+
+
+    public function findObjectById($array,$property,$id){
+        if (!is_array($array)) {
+            return false;
+        }
+        foreach ( $array as $element ) {
+            if ( $id == $element->$property ) {
+                return $element;
+            }
+        }
+        return false;
     }
 }

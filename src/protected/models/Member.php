@@ -42,10 +42,10 @@ class Member extends CActiveRecord
 		return array(
 			array('name', 'required'),
 			array('extId', 'numerical', 'integerOnly'=>true),
-			array('name', 'length', 'max'=>255),
+			array('name, playername', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, extId', 'safe', 'on'=>'search'),
+			array('id, name, playername, extId', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -68,9 +68,10 @@ class Member extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'name' => 'Name',
-			'extId' => 'Ext',
+			'id' => Yii::t('model','ID'),
+			'name' => Yii::t('model','Name'),
+			'extId' => Yii::t('model','Ext.ID'),
+            'playername' => Yii::t('model','Spielername'),
 		);
 	}
 
@@ -87,6 +88,7 @@ class Member extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
+        $criteria->compare('playername',$this->playername,true);
 		$criteria->compare('extId',$this->extId);
 
 		return new CActiveDataProvider($this, array(

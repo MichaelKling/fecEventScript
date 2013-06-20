@@ -35,7 +35,17 @@ class PlayerActiveItem extends CActiveRecord
 		return 'playeractiveitem';
 	}
 
-	/**
+    public function behaviors()
+    {
+        return array(
+            'withRelated'=>array(
+                'class'=>'ext.wr.WithRelatedBehavior',
+            ),
+        );
+    }
+
+
+    /**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -43,12 +53,11 @@ class PlayerActiveItem extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, serverInfo_id', 'required'),
+			array('serverInfo_id, member_id', 'required'),
 			array('serverInfo_id, member_id', 'numerical', 'integerOnly'=>true),
-			array('name', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, serverInfo_id, member_id', 'safe', 'on'=>'search'),
+			array('id, serverInfo_id, member_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -73,10 +82,9 @@ class PlayerActiveItem extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'name' => 'Name',
-			'serverInfo_id' => 'Server Info',
-			'member_id' => 'Member',
+			'id' => Yii::t('model','ID'),
+			'serverInfo_id' => Yii::t('model','Server Info'),
+			'member_id' => Yii::t('model','Spieler'),
 		);
 	}
 
@@ -92,7 +100,6 @@ class PlayerActiveItem extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('name',$this->name,true);
 		$criteria->compare('serverInfo_id',$this->serverInfo_id);
 		$criteria->compare('member_id',$this->member_id);
 

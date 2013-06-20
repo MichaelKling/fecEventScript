@@ -45,5 +45,13 @@
 	<?php echo CHtml::encode(($data->passwordProtected == null)?null:(($data->passwordProtected)?Yii::t("model","Ja"):Yii::t("model","Nein"))); ?>
 	<br />
 
+    <b><?php echo CHtml::encode($data->getAttributeLabel('lastUpdate')); ?>:</b>
+    <?php echo CHtml::encode((!empty($data->lastServerInfo))?$data->lastServerInfo[0]->date:null); ?>
+    <br />
+
+    <b><?php echo CHtml::encode($data->getAttributeLabel('playercount')); ?>:</b>
+    <?php echo CHtml::encode((!empty($data->lastServerInfo) && $data->lastServerInfo[0]->playercount)?$data->lastServerInfo[0]->playercount:null); ?>
+    <br />
+
 
 </div>

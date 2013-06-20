@@ -8,7 +8,6 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List Server', 'url'=>array('index')),
 	array('label'=>'Create Server', 'url'=>array('create')),
     array('label'=>'Query All Server', 'url'=>array('queryAll')),
 );
@@ -43,7 +42,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 
 <?php  $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'server-grid',
-	'dataProvider'=>$model->search(),
+	'dataProvider'=>$dataProvider,
 	'filter'=>$model,
 	'columns'=>array(
 		'id',
@@ -76,6 +75,18 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
             'name' => 'passwordProtected',
             'value' => '($data->passwordProtected == null)?null:(($data->passwordProtected)?Yii::t("model","Ja"):Yii::t("model","Nein"))',
             'filter' => CHtml::activeDropDownList($model,'passwordProtected', array(true => Yii::t("model","Ja"), false => Yii::t("model","Nein")), array('prompt' => Yii::t('model','Alle'))),
+        ),
+        array(
+            'name' => 'lastServerInfo.date',
+            'header'=> $model->getAttributeLabel('lastUpdate'),
+            'value' => '(!empty($data->lastServerInfo))?$data->lastServerInfo[0]->date:null',
+            'filter' => null,
+        ),
+        array(
+            'name' => 'lastServerInfo.playercount',
+            'header'=> $model->getAttributeLabel('playercount'),
+            'value' => '(!empty($data->lastServerInfo) && $data->lastServerInfo[0]->playercount)?$data->lastServerInfo[0]->playercount:null',
+            'filter' => null,
         ),
 		array(
 			'class'=>'CButtonColumn',

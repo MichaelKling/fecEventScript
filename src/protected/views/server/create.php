@@ -8,7 +8,6 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List Server', 'url'=>array('index')),
 	array('label'=>'Manage Server', 'url'=>array('admin')),
 );
 ?>

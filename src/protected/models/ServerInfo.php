@@ -33,7 +33,17 @@ class ServerInfo extends CActiveRecord
 		return 'serverinfo';
 	}
 
-	/**
+    public function behaviors()
+    {
+        return array(
+            'withRelated'=>array(
+                'class'=>'ext.wr.WithRelatedBehavior',
+            ),
+        );
+    }
+
+
+    /**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -57,8 +67,8 @@ class ServerInfo extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'playeractiveitems' => array(self::HAS_MANY, 'Playeractiveitem', 'serverInfo_id'),
-            'playercount'=>array(self::STAT, 'Playeractiveitem', 'serverInfo_id'),
+			'playeractiveitems' => array(self::HAS_MANY, 'PlayerActiveItem', 'serverInfo_id'),
+            'playercount'=>array(self::STAT, 'PlayerActiveItem', 'serverInfo_id'),
 			'server' => array(self::BELONGS_TO, 'Server', 'server_id'),
 		);
 	}
