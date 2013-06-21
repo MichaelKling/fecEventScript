@@ -20,10 +20,11 @@
  */
 class Server extends CActiveRecord
 {
-    const TYPE_OFP = "flashpoint";
+    const TYPE_OFP = "gamespy";
     const TYPE_ARMA = "armedassault";
-    const TYPE_ARMA2 = "arma2";
-    const TYPE_ARMA3 = "arma3";
+    const TYPE_ARMA2 = "armedassault2";
+    const TYPE_ARMA2OA = "armedassault2oa";
+    const TYPE_ARMA3 = "armedassault3";
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -112,6 +113,7 @@ class Server extends CActiveRecord
            Server::TYPE_OFP => Yii::t("model","Operation Flashpoint"),
            Server::TYPE_ARMA => Yii::t("model","Armed Assault"),
            Server::TYPE_ARMA2 => Yii::t("model","ArmA II"),
+           Server::TYPE_ARMA2OA => Yii::t("model","ArmA II OA"),
            Server::TYPE_ARMA3 => Yii::t("model","ArmA III"),
         );
     }
@@ -156,19 +158,20 @@ class Server extends CActiveRecord
 	}
 
     public function updateServer() {
-        Yii::import('ext.gameq.GameQ');
+        Yii::import('ext.gameq2.GameQ');
+        Yii::import('ext.gameq2.*');
         $serversConf = array(
-            $this->id => array($this->type, $this->ip, $this->port),
+            $this->id => array('id' => $this->id, 'type' => $this->type,'host' => $this->ip.':'.$this->port),
         );
         $serverList = array ($this->id => $this);
 
         $gq = new GameQ();
+        spl_autoload_unregister(array('YiiBase','autoload'));
         $gq->addServers($serversConf);
-        $gq->setOption('timeout', 2000);
+        $gq->setOption('timeout', 120);
         $gq->setFilter('normalise');
-        $gq->setFilter('sortplayers', 'gq_ping');
         $results = $gq->requestData();
-
+        spl_autoload_register(array('YiiBase','autoload'));
         foreach ($results as $id => $data) {
             $serverList[$id]->processServerUpdate($data);
         }
@@ -177,22 +180,23 @@ class Server extends CActiveRecord
     }
 
     public static function updateAllServer() {
-        Yii::import('ext.gameq.GameQ');
+        Yii::import('ext.gameq2.GameQ');
+        Yii::import('ext.gameq2.*');
         $servers = Server::model()->with('mission','addons','lastServerInfo')->findAll();
         $serversConf = array();
         $serverList = array();
         foreach($servers as $server) {
-            $serversConf[$server->id] = array($server->type,$server->ip,$server->port);
+            $serversConf[$server->id] = array('id' => $server->id, 'type' => $server->type,'host' => $server->ip.':'.$server->port);
             $serverList[$server->id] = $server;
         }
 
         $gq = new GameQ();
+        spl_autoload_unregister(array('YiiBase','autoload'));
         $gq->addServers($serversConf);
-        $gq->setOption('timeout', 2000);
+        $gq->setOption('timeout', 120);
         $gq->setFilter('normalise');
-        $gq->setFilter('sortplayers', 'gq_ping');
         $results = $gq->requestData();
-
+        spl_autoload_register(array('YiiBase','autoload'));
         foreach ($results as $id => $data) {
             $serverList[$id]->processServerUpdate($data);
         }
@@ -312,14 +316,7 @@ class Server extends CActiveRecord
         $playerNames = array();
         if (isset($data['players']) && !empty($data['players'])) {
             foreach ($data['players'] as $player) {
-                //Unfortunatly the player string is unicode or something... it changes also sometimes to layer_ so lets search:
-                $keys = array_keys($player);
-                foreach($keys as $key) {
-                    if (strpos($key,'layer') !== false) {
-                        $playerNames[] = $player[$key];
-                        break;
-                    }
-                }
+                $playerNames[] = $player['gq_name'];
             }
         }
 

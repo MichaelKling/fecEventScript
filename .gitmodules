@@ -13,3 +13,6 @@
 [submodule "src/protected/extensions/yii-chartjs"]
 	path = src/protected/extensions/yii-chartjs
 	url = git@github.com:MeiSign/yii-chartjs.git
+[submodule "src/protected/extensions/gameq2"]
+	path = src/protected/extensions/gameq2
+	url = git@github.com:Austinb/GameQ.git

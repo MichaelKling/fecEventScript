@@ -128,4 +128,14 @@ class Member extends CActiveRecord
             'sort' => $sort,
         ));
     }
+
+    public function seconds2human($ss) {
+        $s = $ss%60;
+        $m = floor(($ss%3600)/60);
+        $h = floor(($ss%86400)/3600);
+        $d = floor(($ss%2592000)/86400);
+        $M = floor($ss/2592000);
+
+        return (($M)?$M.Yii::t('model'," Mon. "):'').(($d)?$d.Yii::t('model'," Tage "):'').(($h)?$h.Yii::t('model'," St. "):'').(($m)?$m.Yii::t('model'," Min. "):'').(($s)?$s.Yii::t('model'," Sek."):'');
+    }
 }

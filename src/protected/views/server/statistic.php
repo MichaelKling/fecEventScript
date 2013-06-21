@@ -133,7 +133,7 @@ $this->menu=array(
         array(
             'name' => 'totalplaytime',
             'header'=> $member->getAttributeLabel('totalplaytime'),
-            'value' => '$data->totalplaytime',
+            'value' => '$data->seconds2human($data->totalplaytime)',
             'filter' => "",
         ),
     ),
