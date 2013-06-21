@@ -60,6 +60,8 @@ class Member extends CActiveRecord
 		return array(
 			'playeractiveitems' => array(self::HAS_MANY, 'Playeractiveitem', 'member_id'),
 			'registrations' => array(self::HAS_MANY, 'Registration', 'member_id'),
+            'totalplaytime' => array(self::STAT, 'ServerInfo', 'playeractiveitem(member_id, serverInfo_id)',
+                                                 'select' => 'SUM(timeframe)'),
 		);
 	}
 
@@ -73,6 +75,7 @@ class Member extends CActiveRecord
 			'name' => Yii::t('model','Name'),
 			'extId' => Yii::t('model','Ext.ID'),
             'playername' => Yii::t('model','Spielername'),
+            'totalplaytime' => Yii::t('model','Totale Spielzeit'),
 		);
 	}
 
@@ -85,7 +88,7 @@ class Member extends CActiveRecord
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
 
-		$criteria=new CDbCriteria;
+		$criteria=new CDbCriteria();
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
@@ -96,4 +99,33 @@ class Member extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
+    public function searchWithPlayerCount($serverId) {
+        $criteria=new CDbCriteria(array('with' => 'totalplaytime'));
+        $criteria->select = 't.*, SUM(serverInfo.timeframe) as totalplaytime';
+        $criteria->join = 'INNER JOIN playeractiveitem ON t.id = playeractiveitem.member_id '.
+                          'INNER JOIN serverInfo ON serverInfo.id = playeractiveitem.serverInfo_id AND serverInfo.server_id='.(int)$serverId;
+        $criteria->group = 't.id';
+
+        $criteria->compare('id',$this->id);
+        $criteria->compare('name',$this->name,true);
+        $criteria->compare('playername',$this->playername,true);
+        $criteria->compare('extId',$this->extId);
+
+        $sort = new CSort();
+        $sort->attributes = array(
+            'totalplaytime'=>array(
+                'asc'=>'totalplaytime ASC',
+                'desc'=>'totalplaytime DESC',
+            ),
+            '*', // add all of the other columns as sortable
+
+        );
+        $sort->defaultOrder = 'totalplaytime DESC';
+
+        return new CActiveDataProvider($this, array(
+            'criteria'=>$criteria,
+            'sort' => $sort,
+        ));
+    }
 }

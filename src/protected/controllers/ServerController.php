@@ -219,7 +219,18 @@ class ServerController extends Controller
         $last12Labels = $data['labels'];
         $last12Data = $data['playercounts'];
 
-        $data = compact('model','last24Labels','last24Data','last30Labels','last30Data','last12Labels','last12Data');
+        $member = new Member("search");
+        $member->unsetAttributes();  // clear any default values
+        if(isset($_GET['Member']))
+            $member->attributes=$_GET['Member'];
+//, 'order'=>'s desc'
+        //'condition'=>'server_id='.(int)$this->id)
+        $memberDataprovider = $member->searchWithPlayerCount($model->id);
+        /*$criteria = $memberDataprovider->getCriteria();
+        $criteria->compare('server_id',$this->id);
+        $memberDataprovider->setCriteria($criteria);*/
+
+        $data = compact('model','last24Labels','last24Data','last30Labels','last30Data','last12Labels','last12Data','member','memberDataprovider');
         $this->render('statistic',$data);
     }
 

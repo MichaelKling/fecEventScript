@@ -118,3 +118,23 @@ $this->menu=array(
 <p>
 <h2>Spieler nach meister Spielzeit</h2>
 </p>
+<?php $this->widget('zii.widgets.grid.CGridView', array(
+    'id'=>'player-grid',
+    'dataProvider'=>$memberDataprovider,
+    'filter'=>$member,
+    'columns'=>array(
+        array(
+            'name' => 'id',
+            'value' => 'CHtml::link($data->id,array("member/view", "id" => $data->id))',
+            'type' => 'raw',
+        ),
+        'playername',
+        'name',
+        array(
+            'name' => 'totalplaytime',
+            'header'=> $member->getAttributeLabel('totalplaytime'),
+            'value' => '$data->totalplaytime',
+            'filter' => "",
+        ),
+    ),
+)); ?>
