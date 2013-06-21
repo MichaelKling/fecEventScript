@@ -28,7 +28,7 @@ class MissionController extends Controller
 	{
 		return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions'=>array('index','view','create','update','admin','delete'),
+                'actions'=>array('index','view','create','update','admin','delete','updateMission'),
                 'users'=>array('@'),
             ),
             array('deny',  // deny all users
@@ -44,9 +44,7 @@ class MissionController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-		));
+        EQuickDlgs::render('view',array('model'=>$this->loadModel($id)));
 	}
 
 	/**
@@ -63,13 +61,13 @@ class MissionController extends Controller
 		if(isset($_POST['Mission']))
 		{
 			$model->attributes=$_POST['Mission'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+            if($model->save()) {
+                EQuickDlgs::checkDialogJsScript();
+                $this->redirect(array('view','id'=>$model->id));
+            }
 		}
 
-		$this->render('create',array(
-			'model'=>$model,
-		));
+        EQuickDlgs::render('create',array('model'=>$model));
 	}
 
 	/**
@@ -87,13 +85,13 @@ class MissionController extends Controller
 		if(isset($_POST['Mission']))
 		{
 			$model->attributes=$_POST['Mission'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+            if($model->save()) {
+                EQuickDlgs::checkDialogJsScript();
+                $this->redirect(array('view','id'=>$model->id));
+            }
 		}
 
-		$this->render('update',array(
-			'model'=>$model,
-		));
+        EQuickDlgs::render('update',array('model'=>$model));
 	}
 
 	/**
@@ -148,6 +146,12 @@ class MissionController extends Controller
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
 	}
+
+    public function actionUpdateMission()
+    {
+        $es = new EditableSaver('Mission');
+        $es->update();
+    }
 
 	/**
 	 * Performs the AJAX validation.

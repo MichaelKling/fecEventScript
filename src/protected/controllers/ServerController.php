@@ -207,7 +207,7 @@ class ServerController extends Controller
     public function actionStatistic($id) {
         $model=$this->loadModel($id);
 
-        $data = $model->getCommulatedPlayerCounts(date("Y-m-d H:i", strtotime("-24 hours")),date("Y-m-d H:i", strtotime("+30 minutes")),30,'minutes','H:i','Y-m-d H:i');
+        $data = $model->getCommulatedPlayerCounts(date("Y-m-d H:i", strtotime("-24 hours")),date("Y-m-d H:i", strtotime("+2 hours")),1,'hours','H:00','Y-m-d H');
         $last24Labels = $data['labels'];
         $last24Data = $data['playercounts'];
 

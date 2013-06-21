@@ -31,6 +31,7 @@
                 array('label'=>'Administratoren', 'url'=>array('/administrator/admin')),
                 array('label'=>'Server', 'url'=>array('/server/admin')),
                 array('label'=>'Addons', 'url'=>array('/addon/admin')),
+                array('label'=>'Missions', 'url'=>array('/mission/admin')),
             ),
             'htmlOptions'=>array('class'=>'operations'),
         ));

@@ -8,7 +8,6 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List Mission', 'url'=>array('index')),
 	array('label'=>'Manage Mission', 'url'=>array('admin')),
 );
 ?>

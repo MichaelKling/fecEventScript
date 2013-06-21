@@ -61,7 +61,9 @@ class Mission extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'events' => array(self::HAS_MANY, 'Event', 'mission_id'),
-			'missionslotgroups' => array(self::HAS_MANY, 'Missionslotgroup', 'mission_id'),
+			'missionslotgroups' => array(self::HAS_MANY, 'MissionSlotGroup', 'mission_id'),
+            'slotcount' => array(self::STAT, 'MissionSlotGroup', 'mission_id',
+                           'join' => 'JOIN MissionSlot ON MissionSlot.MissionSlotGroup_id = t.id'),
 			'servers' => array(self::HAS_MANY, 'Server', 'mission_id'),
 		);
 	}
@@ -72,10 +74,11 @@ class Mission extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'name' => 'Name',
-			'filehash' => 'Filehash',
-			'filename' => 'Filename',
+			'id' => Yii::t('model',"ID"),
+			'name' => Yii::t('model',"Name"),
+			'filehash' => Yii::t('model',"Datei Hash"),
+			'filename' => Yii::t('model',"Datei Name"),
+            'slotcount' => Yii::t('model',"Slot Anzahl"),
 		);
 	}
 

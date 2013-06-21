@@ -48,10 +48,6 @@ $this->menu=array(
                     ),
                 ),
                 'options' => array(
-                    'scaleOverride' => true,
-                    'scaleStartValue' => (min($last24Data)-2>0)?min($last24Data)-2:0,
-                    'scaleSteps' => floor(((max($last24Data)+2<$model->maxPlayer)?max($last24Data)+2:max($last24Data))/2),
-                    'scaleStepWidth' => 2,
                 )
             )
         );
@@ -77,10 +73,6 @@ $this->menu=array(
             ),
         ),
         'options' => array(
-            'scaleOverride' => true,
-            'scaleStartValue' => (min($last30Data)-2>0)?min($last30Data)-2:0,
-            'scaleSteps' => floor(((max($last30Data)+2<$model->maxPlayer)?max($last30Data)+2:max($last30Data))/2),
-            'scaleStepWidth' => 2,
         )
     )
 );
@@ -106,10 +98,6 @@ $this->menu=array(
             ),
         ),
         'options' => array(
-            'scaleOverride' => true,
-            'scaleStartValue' => (min($last12Data)-2>0)?min($last12Data)-2:0,
-            'scaleSteps' => floor(((max($last12Data)+2<$model->maxPlayer)?max($last12Data)+2:max($last12Data))/2),
-            'scaleStepWidth' => 2,
         )
     )
 );

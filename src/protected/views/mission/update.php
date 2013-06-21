@@ -9,7 +9,6 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List Mission', 'url'=>array('index')),
 	array('label'=>'Create Mission', 'url'=>array('create')),
 	array('label'=>'View Mission', 'url'=>array('view', 'id'=>$model->id)),
 	array('label'=>'Manage Mission', 'url'=>array('admin')),

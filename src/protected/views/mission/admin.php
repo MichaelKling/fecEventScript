@@ -8,7 +8,6 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List Mission', 'url'=>array('index')),
 	array('label'=>'Create Mission', 'url'=>array('create')),
 );
 
@@ -45,12 +44,68 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
-		'id',
-		'name',
+        array(
+            'name' => 'id',
+            'htmlOptions'=>array('width'=>'25px'),
+        ),
+        array(
+            'class' => 'editable.EditableColumn',
+            'name' => 'name',
+            'editable' => array(
+                'url'        => $this->createUrl('mission/updateMission'),
+                'placement'  => 'right',
+            ),
+        ),
 		'filehash',
 		'filename',
-		array(
-			'class'=>'CButtonColumn',
-		),
+        array(
+            'name' => 'slotcount',
+            'header'=> $model->getAttributeLabel('slotcount'),
+            'value' => '$data->slotcount',
+            'filter' => "",
+        ),
+        array(
+            'class'=>'EJuiDlgsColumn',
+            'buttons'=>array(
+                'view' => array(
+                    'label'=> Yii::t('model',"Anzeigen"),
+                ),
+                'update' => array(
+                    'label'=> Yii::t('model',"Bearbeiten"),
+                ),
+            ),
+            'viewDialogEnabled' => true,
+            'viewDialog'=>array(
+                'controllerRoute' => 'mission/view',
+                'actionParams' => array('id' => '$data->primaryKey'),
+                'dialogTitle' => Yii::t('model',"Ansicht"),
+                'dialogWidth' => 600,
+                'dialogHeight' => 500,
+                'closeButtonText' => Yii::t('model',"Schliessen"),
+            ),
+            'updateDialogEnabled' => true,
+            'updateDialog'=>array(
+                'controllerRoute' => 'mission/update',
+                'actionParams' => array('id' => '$data->primaryKey'),
+                'dialogTitle' => Yii::t('model',"Bearbeiten"),
+                'dialogWidth' => 600,
+                'dialogHeight' => 300,
+                'closeButtonText' => Yii::t('model',"Abbruch"),
+                'iframeHtmlOptions' => array('style' => "min-height:100%;background-color:#FFFFFF;")
+            ),
+        ),
 	),
 )); ?>
+<?php EQuickDlgs::iframeButton(
+    array(
+        'controllerRoute' => 'create',
+        'dialogTitle' => Yii::t('model','Erstelle neue Mission'),
+        'dialogWidth' => 600,
+        'dialogHeight' => 300,
+        'openButtonText' => Yii::t('model','Erstelle neue Mission'),
+        'closeButtonText' => Yii::t('model','Abbruch'),
+        'closeOnAction' => true, //important to invoke the close action in the actionCreate
+        'refreshGridId' => 'addon-grid', //the grid with this id will be refreshed after closing
+        'iframeHtmlOptions' => array('style' => "min-height:100%;background-color:#FFFFFF;")
+    )
+); ?>

@@ -21,18 +21,6 @@
 		<?php echo $form->error($model,'name'); ?>
 	</div>
 
-	<div class="row">
-		<?php echo $form->labelEx($model,'filehash'); ?>
-		<?php echo $form->textField($model,'filehash',array('size'=>45,'maxlength'=>45)); ?>
-		<?php echo $form->error($model,'filehash'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'filename'); ?>
-		<?php echo $form->textField($model,'filename',array('size'=>45,'maxlength'=>45)); ?>
-		<?php echo $form->error($model,'filename'); ?>
-	</div>
-
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>
