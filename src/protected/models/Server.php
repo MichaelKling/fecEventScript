@@ -425,4 +425,16 @@ class Server extends CActiveRecord
 
         return $result;
     }
+
+    public function delete(){
+        ServerHasAddon::model()->deleteAllByAttributes(array('server_id' => $this->id));
+
+        //We need to go through all the item and not call deleteAll as we have to use the correspondending delete() function
+        foreach ( $this->serverinfos as $serverinfo ){
+            $serverinfo->delete();
+        }
+
+        Event::model()->updateAll(array('server_id' => null),"server_id = :id",array(':id' => $this->id));
+        parent::delete();
+    }
 }

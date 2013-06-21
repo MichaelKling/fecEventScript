@@ -30,6 +30,7 @@
             'items'=>array(
                 array('label'=>'Administratoren', 'url'=>array('/administrator/admin')),
                 array('label'=>'Server', 'url'=>array('/server/admin')),
+                array('label'=>'Addons', 'url'=>array('/addon/admin')),
             ),
             'htmlOptions'=>array('class'=>'operations'),
         ));

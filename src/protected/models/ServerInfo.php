@@ -107,4 +107,12 @@ class ServerInfo extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
+    public function delete(){
+        //We need to go through all the item and not call deleteAll as we have to use the correspondending delete() function
+        foreach ( $this->playeractiveitems as $playeractiveitem ){
+            $playeractiveitem->delete();
+        }
+        parent::delete();
+    }
 }

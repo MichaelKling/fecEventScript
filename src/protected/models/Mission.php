@@ -99,4 +99,10 @@ class Mission extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
+    public function delete(){
+        Event::model()->updateAll(array('mission_id' => null),"mission_id = :id",array(':id' => $this->id));
+        Server::model()->updateAll(array('mission_id' => null),"mission_id = :id",array(':id' => $this->id));
+        parent::delete();
+    }
 }

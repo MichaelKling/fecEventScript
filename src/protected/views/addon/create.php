@@ -8,7 +8,6 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'List Addon', 'url'=>array('index')),
 	array('label'=>'Manage Addon', 'url'=>array('admin')),
 );
 ?>

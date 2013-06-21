@@ -107,4 +107,10 @@ class PlayerActiveItem extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
+    public function delete(){
+        Registration::model()->updateAll(array('firstSeen' => null),"firstSeen = :id",array(':id' => $this->id));
+        Registration::model()->updateAll(array('lastSeen' => null),"lastSeen = :id",array(':id' => $this->id));
+        parent::delete();
+    }
 }

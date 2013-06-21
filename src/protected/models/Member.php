@@ -138,4 +138,15 @@ class Member extends CActiveRecord
 
         return (($M)?$M.Yii::t('model'," Mon. "):'').(($d)?$d.Yii::t('model'," Tage "):'').(($h)?$h.Yii::t('model'," St. "):'').(($m)?$m.Yii::t('model'," Min. "):'').(($s)?$s.Yii::t('model'," Sek."):'');
     }
+
+    public function delete(){
+        //We need to go through all the item and not call deleteAll as we have to use the correspondending delete() function
+        foreach ( $this->playeractiveitems as $playeractiveitem ){
+            $playeractiveitem->delete();
+        }
+        foreach ( $this->registrations as $registrations ){
+            $registrations->delete();
+        }
+        parent::delete();
+    }
 }

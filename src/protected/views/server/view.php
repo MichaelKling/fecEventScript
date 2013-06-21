@@ -72,6 +72,17 @@ $this->menu=array(
             'htmlOptions'=>array('width'=>'40px'),
         ),
         array(
+            'class' => 'editable.EditableColumn',
+            'name' => 'type',
+            'editable' => array(
+                'type'     => 'select',
+                'url'      => $this->createUrl('addon/updateAddon'),
+                'source'   => $addon->typeLabels(),
+            ),
+            'filter' => CHtml::activeDropDownList($addon,'type', $addon->typeLabels(), array('prompt' => Yii::t('model','Alle'))),
+            'htmlOptions'=>array('width'=>'60px'),
+        ),
+        array(
             'name'=>'shortname',
             'value'=>'$data->shortname',
             'htmlOptions'=>array('width'=>'150px'),
@@ -84,17 +95,6 @@ $this->menu=array(
                 'placement'  => 'right',
             ),
             'htmlOptions'=>array('min-width'=>'200px'),
-        ),
-        array(
-            'class' => 'editable.EditableColumn',
-            'name' => 'type',
-            'editable' => array(
-                'type'     => 'select',
-                'url'      => $this->createUrl('addon/updateAddon'),
-                'source'   => $addon->typeLabels(),
-            ),
-            'filter' => CHtml::activeDropDownList($addon,'type', $addon->typeLabels(), array('prompt' => Yii::t('model','Alle'))),
-            'htmlOptions'=>array('width'=>'60px'),
         ),
         array(
             'class'=>'EJuiDlgsColumn',

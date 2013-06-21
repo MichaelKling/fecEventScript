@@ -121,4 +121,10 @@ class Addon extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
+    public function delete(){
+        EventHasAddon::model()->deleteAllByAttributes(array('addon_id' => $this->id));
+        ServerHasAddon::model()->deleteAllByAttributes(array('addon_id' => $this->id));
+        parent::delete();
+    }
 }
