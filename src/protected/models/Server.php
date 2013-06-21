@@ -399,7 +399,7 @@ class Server extends CActiveRecord
         $sql = "SELECT count(DISTINCT member_id) AS commulatedPlayerCount, intervals.intervalNumber as intervalNumber
                 FROM serverInfo AS serverInfo
                 JOIN playeractiveitem ON playeractiveitem.serverInfo_id = serverInfo.id
-                CROSS JOIN ( $subQuery ) AS intervals ON intervals.fromDate < serverInfo.date AND intervals.toDate >= serverInfo.date
+                JOIN ( $subQuery ) AS intervals ON intervals.fromDate < serverInfo.date AND intervals.toDate >= serverInfo.date
                 WHERE
                   server_id = :server_id
                   GROUP BY intervalNumber";
@@ -408,7 +408,7 @@ class Server extends CActiveRecord
         $command->bindParam(":server_id", $server_id, PDO::PARAM_INT);
         $rawData = $command->queryAll();
         $command->reset();
-        
+
         //Format the results
         $result = array();
         $result['distances'] = $distances;
