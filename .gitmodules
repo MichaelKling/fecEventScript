@@ -10,3 +10,6 @@
 [submodule "src/protected/extensions/x-editable"]
 	path = src/protected/extensions/x-editable
 	url = git@github.com:vitalets/x-editable-yii.git
+[submodule "src/protected/extensions/yii-chartjs"]
+	path = src/protected/extensions/yii-chartjs
+	url = git@github.com:MeiSign/yii-chartjs.git

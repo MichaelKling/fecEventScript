@@ -64,9 +64,15 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
             'filter' => CHtml::activeDropDownList($model,'type', $model->typeLabels(), array('prompt' => Yii::t('model','Alle'))),
         ),
         array(
+            'class' => 'editable.EditableColumn',
             'name' => 'country',
-            'value' => '($data->country)?Countries::getCountry($data->country):null',
+            'editable' => array(
+                'type'     => 'select',
+                'url'      => $this->createUrl('server/updateServer'),
+                'source'   => Countries::getCountries(),
+            ),
             'filter' => CHtml::activeDropDownList($model,'country', Countries::getCountries(), array('prompt' => Yii::t('model','Alle'))),
+            'htmlOptions'=>array('width'=>'60px'),
         ),
         array(
             'name' => 'mission_id',
@@ -94,7 +100,18 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
             'filter' => null,
         ),
 		array(
-			'class'=>'CButtonColumn',
+            'class'=>'EJuiDlgsColumn',
+            'viewDialogEnabled' => false,
+            'updateDialogEnabled' => true,
+            'updateDialog'=>array(
+                'controllerRoute' => 'server/update',
+                'actionParams' => array('id' => '$data->primaryKey'),
+                'dialogTitle' => Yii::t('model',"Bearbeiten"),
+                'dialogWidth' => 600,
+                'dialogHeight' => 500,
+                'closeButtonText' => Yii::t('model',"Abbruch"),
+                'iframeHtmlOptions' => array('style' => "min-height:100%;background-color:#FFFFFF;")
+            ),
 		),
 	),
 )); ?>

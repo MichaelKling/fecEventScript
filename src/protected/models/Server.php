@@ -267,6 +267,9 @@ class Server extends CActiveRecord
             }
             $this->mission = $newMission;
             $relationsToSave[] = 'mission';
+        } else if (!isset($data['mission']) && ($this->mission != null)) {
+            $changed = true;
+            $this->mission_id = null;
         }
 
 
@@ -339,5 +342,69 @@ class Server extends CActiveRecord
             }
         }
         return false;
+    }
+
+    public function findArrayById($array,$attribute,$id){
+        if (!is_array($array)) {
+            return false;
+        }
+        foreach ( $array as $element ) {
+            if ( $id == $element[$attribute] ) {
+                return $element;
+            }
+        }
+        return false;
+    }
+
+
+    public function getCommulatedPlayerCounts($startDate,$endDate,$interval,$intervalType = "days",$labelFormat = "Y-m-d H:i:s") {
+        //Create intervals:
+        $endDateStamp = strtotime($endDate);
+        $startDateStamp = strtotime($startDate);
+        $i = 0;
+        $distances = array();
+        $subQuery = "";
+        while (strtotime("+".(($i+1)*$interval)." ".$intervalType,$startDateStamp) < $endDateStamp) {
+            $distance = array();
+            $distance['fromTimestamp'] = strtotime("+".($i*$interval)." ".$intervalType,$startDateStamp);
+            $distance['toTimestamp'] = strtotime("+".(($i+1)*$interval)." ".$intervalType,$startDateStamp);
+            $distance['from'] = date($labelFormat, $distance['fromTimestamp']);
+            $distance['to'] = date($labelFormat, $distance['toTimestamp']);
+            $distances[] = $distance;
+
+            //Special care here! Injections could be possible by not using DAO
+            if ($i > 0) {
+                $subQuery = $subQuery." UNION ALL ";
+            }
+            $subQuery = $subQuery." SELECT '".((int)$distance['fromTimestamp'])."' fromDate, '".((int)$distance['toTimestamp'])."' toDate, ".((int)$i)." intervalNumber ";
+            $i++;
+        }
+
+        //Run the query
+        $sql = "SELECT COUNT(DISTINCT member_id) AS commulatedPlayerCount, intervals.intervalNumber as intervalNumber  FROM serverInfo
+                LEFT JOIN playeractiveitem ON playeractiveitem.serverInfo_id = serverInfo.id
+                LEFT JOIN ( $subQuery ) intervals ON intervals.fromDate <= UNIX_TIMESTAMP(serverInfo.date) AND intervals.toDate > UNIX_TIMESTAMP(serverInfo.date)
+                WHERE
+                  server_id = :server_id
+                GROUP BY intervalNumber";
+        $command = Yii::app()->db->createCommand($sql);
+        $server_id = $this->id;
+        $command->bindParam(":server_id", $server_id, PDO::PARAM_INT);
+        $rawData = $command->queryAll();
+        $command->reset();
+
+        //Format the results
+        $result = array();
+        $result['distances'] = $distances;
+        $result['raw'] = $rawData;
+        $result['labels'] = array();
+        $result['playercounts'] = array();
+        foreach ($distances as $key => $distance) {
+            $result['labels'][] = $distance['from'];
+            $item = $this->findArrayById($rawData,'intervalNumber',$key);
+            $result['playercounts'][] = ($item)?$item['commulatedPlayerCount']:0;
+        }
+
+        return $result;
     }
 }

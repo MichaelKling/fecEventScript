@@ -28,7 +28,7 @@ class ServerController extends Controller
 	{
 		return array(
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions'=>array('index','view','create','update','admin','delete','query','queryAll'),
+                'actions'=>array('index','view','create','update','admin','delete','query','queryAll','updateServer','statistic'),
                 'users'=>array('@'),
             ),
             array('deny',  // deny all users
@@ -44,7 +44,7 @@ class ServerController extends Controller
 	 */
 	public function actionView($id)
 	{
-        $model = $this->loadModel($id);
+        $model = $this->loadModel($id,array('lastServerInfo.playercount','lastServerInfo.playeractiveitems.member','addons','mission'));
 
         $addonIds = array();
         foreach ($model->addons as $addon) {
@@ -128,13 +128,13 @@ class ServerController extends Controller
 		if(isset($_POST['Server']))
 		{
 			$model->attributes=$_POST['Server'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+            if($model->save()) {
+                EQuickDlgs::checkDialogJsScript();
+                $this->redirect(array('view','id'=>$model->id));
+            }
 		}
 
-		$this->render('update',array(
-			'model'=>$model,
-		));
+        EQuickDlgs::render('update',array('model'=>$model));
 	}
 
 	/**
@@ -204,18 +204,43 @@ class ServerController extends Controller
         $this->redirect(array('admin'));
     }
 
+    public function actionStatistic($id) {
+        $model=$this->loadModel($id);
+
+        $data = $model->getCommulatedPlayerCounts(date("Y-m-d H:i", strtotime("-24 hours")),date("Y-m-d H:i"),30,'minutes','H:i');
+        $last24Labels = array_reverse($data['labels']);
+        $last24Data = array_reverse($data['playercounts']);
+
+        $data = $model->getCommulatedPlayerCounts(date("Y-m-d", strtotime("-30 days")),date("Y-m-d"),1,'days',"m-d");
+        $last30Labels = array_reverse($data['labels']);
+        $last30Data = array_reverse($data['playercounts']);
+
+        $data = $model->getCommulatedPlayerCounts(date("Y-m", strtotime("-12 month")),date("Y-m"),1,'month',"Y-m");
+        $last12Labels = array_reverse($data['labels']);
+        $last12Data = array_reverse($data['playercounts']);
+
+        $data = compact('model','last24Labels','last24Data','last30Labels','last30Data','last12Labels','last12Data');
+        $this->render('statistic',$data);
+    }
+
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer the ID of the model to be loaded
 	 */
-	public function loadModel($id)
+	public function loadModel($id,$with = array())
 	{
-		$model=Server::model()->with('lastServerInfo.playercount','lastServerInfo.playeractiveitems.member','addons','mission')->findByPk($id);
+		$model=Server::model()->with($with)->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
 	}
+
+    public function actionUpdateServer()
+    {
+        $es = new EditableSaver('Server');
+        $es->update();
+    }
 
 	/**
 	 * Performs the AJAX validation.

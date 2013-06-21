@@ -9,6 +9,7 @@ $this->breadcrumbs=array(
 
 $this->menu=array(
 	array('label'=>'Create Server', 'url'=>array('create')),
+    array('label'=>'View Server Statistics', 'url'=>array('statistic', 'id'=>$model->id)),
 	array('label'=>'Update Server', 'url'=>array('update', 'id'=>$model->id)),
     array('label'=>'Query Server', 'url'=>array('query', 'id'=>$model->id)),
 	array('label'=>'Delete Server', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
@@ -16,7 +17,7 @@ $this->menu=array(
 );
 ?>
 
-<h1>View Server #<?php echo $model->id; ?></h1>
+<h1>View Server #<?php echo $model->id; ?> - <?php echo $model->name; ?></h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
@@ -132,7 +133,7 @@ $this->menu=array(
 <br />
 <h2>Aktive Spieler</h2>
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-    'id'=>'addon-grid',
+    'id'=>'player-grid',
     'dataProvider'=>$memberDataprovider,
     'filter'=>$member,
     'columns'=>array(

@@ -6,6 +6,7 @@
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 Yii::setPathOfAlias('editable', dirname(__FILE__).'/../extensions/x-editable');
+Yii::setPathOfAlias('chartjs', dirname(__FILE__).'/../extensions/yii-chartjs');
 
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
@@ -88,6 +89,7 @@ return array(
                 'emptytext' => Yii::t('config','Klicken zum bearbeiten'),
             )
         ),
+        'chartjs'=>array( 'class' => 'chartjs.components.ChartJs', ),
     ),
 
 	// application-level parameters that can be accessed
