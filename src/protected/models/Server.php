@@ -164,7 +164,7 @@ class Server extends CActiveRecord
 
         $gq = new GameQ();
         $gq->addServers($serversConf);
-        $gq->setOption('timeout', 5000);
+        $gq->setOption('timeout', 2000);
         $gq->setFilter('normalise');
         $gq->setFilter('sortplayers', 'gq_ping');
         $results = $gq->requestData();
@@ -226,35 +226,52 @@ class Server extends CActiveRecord
             $oldAddonsIds[$addon->shortname] = $addon;
         }
 
-        $addons = explode(";",$data['gq_mod']);
-        $diff = array_diff($oldAddonsNames,$addons) + array_diff($addons,$oldAddonsNames);
-        if (!empty($diff)) {
-            $existingAddons = Addon::model()->findAllByAttributes(array('shortname'=>$diff));
+        if ($data['gq_mod']) {
+            $addons = explode(";",$data['gq_mod']);
 
-
-            $changed = true;
-
-            $newAddons = array();
-            foreach ($addons as $addon) {
-                if (isset($oldAddonsIds[$addon])) {
-                    $newAddons[] = $oldAddonsIds[$addon];
-                } else {
-                    //Is it in existing addons?
-                    $existingAddon = $this->findObjectById($existingAddons,"shortname",$addon);
-                    if ($existingAddon) {
-                        $newAddons[] = $existingAddon;
-                    } else {
-                        $newAddon = new Addon();
-                        $newAddon->name = $addon;
-                        $newAddon->shortname = $addon;
-                        $newAddon->type = Addon::TYPE_OTHER;
-                        $newAddons[] = $newAddon;
-                    }
+            $old = array_diff($oldAddonsNames,$addons);
+            if (!empty($old)) {
+                foreach ($old as $addonName) {
+                    ServerHasAddon::model()->deleteAllByAttributes(array('addon_id' => $oldAddonsIds[$addon]->id, 'server_id' => $this->id));
                 }
             }
-            $this->addons = $newAddons;
-            $relationsToSave[] = 'addons';
+
+            $new = array_diff($addons,$oldAddonsNames);
+            if (!empty($new)) {
+                $changed = true;
+                $existingAddons = Addon::model()->findAllByAttributes(array('shortname'=>$new));
+
+                $newAddons = array();
+                foreach ($addons as $addon) {
+                    if (isset($oldAddonsIds[$addon])) {
+                        //Overtake old entry
+                        $newAddons[] = $oldAddonsIds[$addon];
+                    } else {
+                        //Is it in existing addons?
+                        $existingAddon = $this->findObjectById($existingAddons,"shortname",$addon);
+                        if ($existingAddon) {
+                            //Add existing addon
+                            $newAddons[] = $existingAddon;
+                        } else {
+                            //Create and add new addon
+                            $newAddon = new Addon();
+                            $newAddon->name = $addon;
+                            $newAddon->shortname = $addon;
+                            $newAddon->type = Addon::TYPE_OTHER;
+                            $newAddons[] = $newAddon;
+                        }
+                    }
+                }
+                $this->addons = $newAddons;
+                $relationsToSave[] = 'addons';
+            }
+        } else {
+            //We need to delete all addon connection:
+            foreach ($oldAddons as $addon) {
+                ServerHasAddon::model()->deleteAllByAttributes(array('addon_id' => $addon->id, 'server_id' => $this->id));
+            }
         }
+
 
         if (isset($data['mission']) && (($this->mission == null) || ($data['mission'] != $this->mission->name))) {
             $changed = true;
@@ -272,9 +289,8 @@ class Server extends CActiveRecord
             $this->mission_id = null;
         }
 
-
-        if ($changed) {
-            $this->withRelated->save(true,$relationsToSave);
+        if ($changed == true) {
+            $this->withRelated->save(false,$relationsToSave);
         }
 
         //Regardless of what happened, creation of an serverInfo item:
@@ -296,8 +312,8 @@ class Server extends CActiveRecord
         $playerNames = array();
         if (isset($data['players']) && !empty($data['players'])) {
             foreach ($data['players'] as $player) {
-                if (isset($player['player_'])) {
-                    $playerNames[] = $player['player_'];
+                if (is_array($player) && !empty($player)) {
+                    $playerNames[] = reset($player);
                 }
             }
         }
@@ -327,7 +343,7 @@ class Server extends CActiveRecord
             $serverInfo->playeractiveitems = $playerActiveItems;
             $serverInfo->withRelated->save(false,array('playeractiveitems' => array('member')));
         } else {
-            $serverInfo->save(true);
+            $serverInfo->save(false);
         }
     }
 
