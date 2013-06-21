@@ -392,23 +392,23 @@ class Server extends CActiveRecord
             if ($i > 0) {
                 $subQuery = $subQuery." UNION ALL ";
             }
-            $subQuery = $subQuery." SELECT '".((int)$distance['fromTimestamp'])."' fromDate, '".((int)$distance['toTimestamp'])."' toDate, ".((int)$i)." intervalNumber ";
+            $subQuery = $subQuery." SELECT '".date_create_from_format($labelFormat,$distance['from'])->format('Y-m-d H:i:s')."' fromDate, '".date_create_from_format($labelFormat, $distance['to'])->format('Y-m-d H:i:s')."' toDate, ".((int)$i)." AS intervalNumber ";
             $i++;
         }
 
-        //Run the query
-        $sql = "SELECT COUNT(DISTINCT member_id) AS commulatedPlayerCount, intervals.intervalNumber as intervalNumber  FROM serverInfo
-                LEFT JOIN playeractiveitem ON playeractiveitem.serverInfo_id = serverInfo.id
-                LEFT JOIN ( $subQuery ) intervals ON intervals.fromDate <= UNIX_TIMESTAMP(serverInfo.date) AND intervals.toDate > UNIX_TIMESTAMP(serverInfo.date)
+        $sql = "SELECT count(DISTINCT member_id) AS commulatedPlayerCount, intervals.intervalNumber as intervalNumber
+                FROM serverInfo AS serverInfo
+                JOIN playeractiveitem ON playeractiveitem.serverInfo_id = serverInfo.id
+                CROSS JOIN ( $subQuery ) AS intervals ON intervals.fromDate < serverInfo.date AND intervals.toDate >= serverInfo.date
                 WHERE
                   server_id = :server_id
-                GROUP BY intervalNumber";
+                  GROUP BY intervalNumber";
         $command = Yii::app()->db->createCommand($sql);
         $server_id = $this->id;
         $command->bindParam(":server_id", $server_id, PDO::PARAM_INT);
         $rawData = $command->queryAll();
         $command->reset();
-
+        
         //Format the results
         $result = array();
         $result['distances'] = $distances;
@@ -418,7 +418,7 @@ class Server extends CActiveRecord
         foreach ($distances as $key => $distance) {
             $result['labels'][] = $distance['from'];
             $item = $this->findArrayById($rawData,'intervalNumber',$key);
-            $result['playercounts'][] = ($item)?$item['commulatedPlayerCount']:0;
+            $result['playercounts'][] = (int) (($item)?$item['commulatedPlayerCount']:0);
         }
 
         return $result;

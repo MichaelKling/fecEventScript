@@ -47,7 +47,9 @@ $this->menu=array(
                         "data" => $last24Data
                     ),
                 ),
-                'options' => array()
+                'options' => array(
+                    'scaleLabel' => "<%=parseInt(value)%>"
+                )
             )
         );
     ?>
@@ -71,7 +73,9 @@ $this->menu=array(
                 "data" => $last30Data
             ),
         ),
-        'options' => array()
+        'options' => array(
+            'scaleLabel' => "<%=parseInt(value)%>"
+        )
     )
 );
 ?>
@@ -95,7 +99,9 @@ $this->menu=array(
                 "data" => $last12Data
             ),
         ),
-        'options' => array()
+        'options' => array(
+            'scaleLabel' => "<%=parseInt(value)%>"
+        )
     )
 );
 ?>

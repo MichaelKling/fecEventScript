@@ -207,17 +207,17 @@ class ServerController extends Controller
     public function actionStatistic($id) {
         $model=$this->loadModel($id);
 
-        $data = $model->getCommulatedPlayerCounts(date("Y-m-d H:i", strtotime("-24 hours")),date("Y-m-d H:i"),30,'minutes','H:i');
-        $last24Labels = array_reverse($data['labels']);
-        $last24Data = array_reverse($data['playercounts']);
+        $data = $model->getCommulatedPlayerCounts(date("Y-m-d H:i", strtotime("-24 hours")),date("Y-m-d H:i", strtotime("+30 minutes")),30,'minutes','H:i');
+        $last24Labels = $data['labels'];
+        $last24Data = $data['playercounts'];
 
-        $data = $model->getCommulatedPlayerCounts(date("Y-m-d", strtotime("-30 days")),date("Y-m-d"),1,'days',"m-d");
-        $last30Labels = array_reverse($data['labels']);
-        $last30Data = array_reverse($data['playercounts']);
+        $data = $model->getCommulatedPlayerCounts(date("Y-m-d", strtotime("-30 days")),date("Y-m-d", strtotime("+1 day")),1,'days',"m-d");
+        $last30Labels = $data['labels'];
+        $last30Data = $data['playercounts'];
 
-        $data = $model->getCommulatedPlayerCounts(date("Y-m", strtotime("-12 month")),date("Y-m"),1,'month',"Y-m");
-        $last12Labels = array_reverse($data['labels']);
-        $last12Data = array_reverse($data['playercounts']);
+        $data = $model->getCommulatedPlayerCounts(date("Y-m", strtotime("-12 month")),date("Y-m", strtotime("+1 month")),1,'month',"Y-m");
+        $last12Labels = $data['labels'];
+        $last12Data = $data['playercounts'];
 
         $data = compact('model','last24Labels','last24Data','last30Labels','last30Data','last12Labels','last12Data');
         $this->render('statistic',$data);
