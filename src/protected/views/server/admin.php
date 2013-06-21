@@ -126,3 +126,16 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		),
 	),
 )); ?>
+<?php EQuickDlgs::iframeButton(
+    array(
+        'controllerRoute' => 'create',
+        'dialogTitle' => Yii::t('model','Erstelle neuen Server'),
+        'dialogWidth' => 600,
+        'dialogHeight' => 500,
+        'openButtonText' => Yii::t('model','Erstelle neuen Server'),
+        'closeButtonText' => Yii::t('model','Abbruch'),
+        'closeOnAction' => true, //important to invoke the close action in the actionCreate
+        'refreshGridId' => 'addon-grid', //the grid with this id will be refreshed after closing
+        'iframeHtmlOptions' => array('style' => "min-height:100%;background-color:#FFFFFF;")
+    )
+); ?>

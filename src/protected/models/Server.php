@@ -375,7 +375,7 @@ class Server extends CActiveRecord
     }
 
 
-    public function getCommulatedPlayerCounts($startDate,$endDate,$interval,$intervalType = "days",$labelFormat = "Y-m-d H:i:s") {
+    public function getCommulatedPlayerCounts($startDate,$endDate,$interval,$intervalType = "days",$labelFormat = "Y-m-d H:i:s",$accuracy = "Y-m-d H:i:s") {
         //Create intervals:
         $endDateStamp = strtotime($endDate);
         $startDateStamp = strtotime($startDate);
@@ -386,15 +386,24 @@ class Server extends CActiveRecord
             $distance = array();
             $distance['fromTimestamp'] = strtotime("+".($i*$interval)." ".$intervalType,$startDateStamp);
             $distance['toTimestamp'] = strtotime("+".(($i+1)*$interval)." ".$intervalType,$startDateStamp);
-            $distance['from'] = date($labelFormat, $distance['fromTimestamp']);
-            $distance['to'] = date($labelFormat, $distance['toTimestamp']);
+            $distance['fromDisplay'] = date($labelFormat, $distance['fromTimestamp']);
+            $distance['toDisplay'] = date($labelFormat, $distance['toTimestamp']);
+
+            $from = date_parse_from_format($accuracy,date("Y-m-d H:i:s", $distance['fromTimestamp']));
+            $to   = date_parse_from_format($accuracy,date("Y-m-d H:i:s", $distance['toTimestamp']));
+            $distance['fromAccurate'] = str_pad($from['year'],4,"0",STR_PAD_LEFT)."-".str_pad($from['month'],2,"0",STR_PAD_LEFT)."-".str_pad($from['day'],2,"0",STR_PAD_LEFT)." ".str_pad($from['hour'],2,"0",STR_PAD_LEFT).":".str_pad($from['minute'],2,"0",STR_PAD_LEFT).":".str_pad($from['second'],2,"0",STR_PAD_LEFT);
+            $distance['toAccurate'] = str_pad($to['year'],4,"0",STR_PAD_LEFT)."-".str_pad($to['month'],2,"0",STR_PAD_LEFT)."-".str_pad($to['day'],2,"0",STR_PAD_LEFT)." ".str_pad($to['hour'],2,"0",STR_PAD_LEFT).":".str_pad($to['minute'],2,"0",STR_PAD_LEFT).":".str_pad($to['second'],2,"0",STR_PAD_LEFT);
             $distances[] = $distance;
 
             //Special care here! Injections could be possible by not using DAO
             if ($i > 0) {
                 $subQuery = $subQuery." UNION ALL ";
             }
-            $subQuery = $subQuery." SELECT '".date_create_from_format($labelFormat,$distance['from'])->format('Y-m-d H:i:s')."' fromDate, '".date_create_from_format($labelFormat, $distance['to'])->format('Y-m-d H:i:s')."' toDate, ".((int)$i)." AS intervalNumber ";
+            $subQuery = $subQuery." SELECT '".
+                            $distance['fromAccurate'].
+                            "' fromDate, '".
+                            $distance['toAccurate'].
+                            "' toDate, ".((int)$i)." AS intervalNumber ";
             $i++;
         }
 
@@ -418,7 +427,7 @@ class Server extends CActiveRecord
         $result['labels'] = array();
         $result['playercounts'] = array();
         foreach ($distances as $key => $distance) {
-            $result['labels'][] = $distance['from'];
+            $result['labels'][] = $distance['fromDisplay'];
             $item = $this->findArrayById($rawData,'intervalNumber',$key);
             $result['playercounts'][] = (int) (($item)?$item['commulatedPlayerCount']:0);
         }

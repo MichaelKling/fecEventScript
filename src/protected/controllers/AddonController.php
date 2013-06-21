@@ -60,13 +60,13 @@ class AddonController extends Controller
 		if(isset($_POST['Addon']))
 		{
 			$model->attributes=$_POST['Addon'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+			if($model->save()) {
+                EQuickDlgs::checkDialogJsScript();
+                $this->redirect(array('view','id'=>$model->id));
+            }
 		}
 
-		$this->render('create',array(
-			'model'=>$model,
-		));
+        EQuickDlgs::render('create',array('model'=>$model));
 	}
 
 	/**

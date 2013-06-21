@@ -104,13 +104,13 @@ class ServerController extends Controller
 		if(isset($_POST['Server']))
 		{
 			$model->attributes=$_POST['Server'];
-			if($model->save())
+			if($model->save()) {
+                EQuickDlgs::checkDialogJsScript();
 				$this->redirect(array('view','id'=>$model->id));
+            }
 		}
 
-		$this->render('create',array(
-			'model'=>$model,
-		));
+        EQuickDlgs::render('create',array('model'=>$model));
 	}
 
 	/**
@@ -207,15 +207,15 @@ class ServerController extends Controller
     public function actionStatistic($id) {
         $model=$this->loadModel($id);
 
-        $data = $model->getCommulatedPlayerCounts(date("Y-m-d H:i", strtotime("-24 hours")),date("Y-m-d H:i", strtotime("+30 minutes")),30,'minutes','H:i');
+        $data = $model->getCommulatedPlayerCounts(date("Y-m-d H:i", strtotime("-24 hours")),date("Y-m-d H:i", strtotime("+30 minutes")),30,'minutes','H:i','Y-m-d H:i');
         $last24Labels = $data['labels'];
         $last24Data = $data['playercounts'];
 
-        $data = $model->getCommulatedPlayerCounts(date("Y-m-d", strtotime("-30 days")),date("Y-m-d", strtotime("+1 day")),1,'days',"m-d");
+        $data = $model->getCommulatedPlayerCounts(date("Y-m-d", strtotime("-30 days")),date("Y-m-d", strtotime("+2 day")),1,'days',"m-d",'Y-m-d');
         $last30Labels = $data['labels'];
         $last30Data = $data['playercounts'];
 
-        $data = $model->getCommulatedPlayerCounts(date("Y-m", strtotime("-12 month")),date("Y-m", strtotime("+1 month")),1,'month',"Y-m");
+        $data = $model->getCommulatedPlayerCounts(date("Y-m", strtotime("-12 month")),date("Y-m", strtotime("+2 month")),1,'month',"Y-m",'Y-m');
         $last12Labels = $data['labels'];
         $last12Data = $data['playercounts'];
 
@@ -223,12 +223,8 @@ class ServerController extends Controller
         $member->unsetAttributes();  // clear any default values
         if(isset($_GET['Member']))
             $member->attributes=$_GET['Member'];
-//, 'order'=>'s desc'
-        //'condition'=>'server_id='.(int)$this->id)
+
         $memberDataprovider = $member->searchWithPlayerCount($model->id);
-        /*$criteria = $memberDataprovider->getCriteria();
-        $criteria->compare('server_id',$this->id);
-        $memberDataprovider->setCriteria($criteria);*/
 
         $data = compact('model','last24Labels','last24Data','last30Labels','last30Data','last12Labels','last12Data','member','memberDataprovider');
         $this->render('statistic',$data);
