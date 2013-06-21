@@ -47,12 +47,13 @@ $this->menu=array(
         ),
         array(
             'name' => 'lastServerInfo.date',
-            'header'=> $model->getAttributeLabel('lastUpdate'),
-            'value' => (!empty($model->lastServerInfo))?$model->lastServerInfo[0]->date:null,
+            'label'=> $model->getAttributeLabel('lastUpdate'),
+            'value' => CHtml::link((!empty($model->lastServerInfo))?$model->lastServerInfo[0]->date:Yii::t("model","Jetzt Updaten"),array("query", "id" => $model->id)),
+            'type' => 'raw',
         ),
         array(
             'name' => 'lastServerInfo.playercount',
-            'header'=> $model->getAttributeLabel('playercount'),
+            'label'=> $model->getAttributeLabel('playercount'),
             'value' => (!empty($model->lastServerInfo) && $model->lastServerInfo[0]->playercount)?$model->lastServerInfo[0]->playercount:null,
         ),
 	),

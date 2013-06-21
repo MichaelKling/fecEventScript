@@ -232,7 +232,7 @@ class Server extends CActiveRecord
             $old = array_diff($oldAddonsNames,$addons);
             if (!empty($old)) {
                 foreach ($old as $addonName) {
-                    ServerHasAddon::model()->deleteAllByAttributes(array('addon_id' => $oldAddonsIds[$addon]->id, 'server_id' => $this->id));
+                    ServerHasAddon::model()->deleteAllByAttributes(array('addon_id' => $oldAddonsIds[$addonName]->id, 'server_id' => $this->id));
                 }
             }
 
@@ -312,8 +312,13 @@ class Server extends CActiveRecord
         $playerNames = array();
         if (isset($data['players']) && !empty($data['players'])) {
             foreach ($data['players'] as $player) {
-                if (is_array($player) && !empty($player)) {
-                    $playerNames[] = reset($player);
+                //Unfortunatly the player string is unicode or something... it changes also sometimes to layer_ so lets search:
+                $keys = array_keys($player);
+                foreach($keys as $key) {
+                    if (strpos($key,'layer') !== false) {
+                        $playerNames[] = $player[$key];
+                        break;
+                    }
                 }
             }
         }

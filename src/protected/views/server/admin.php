@@ -90,8 +90,9 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
         array(
             'name' => 'lastServerInfo.date',
             'header'=> $model->getAttributeLabel('lastUpdate'),
-            'value' => '(!empty($data->lastServerInfo))?$data->lastServerInfo[0]->date:null',
+            'value' => 'CHtml::link((!empty($data->lastServerInfo))?$data->lastServerInfo[0]->date:Yii::t("model","Jetzt Updaten"),array("query", "id" => $data->id))',
             'filter' => null,
+            'type' => 'raw',
         ),
         array(
             'name' => 'lastServerInfo.playercount',
@@ -101,6 +102,16 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
         ),
 		array(
             'class'=>'EJuiDlgsColumn',
+            'template' => '{view} {statistic} {update} {delete}',
+            'htmlOptions'=>array('width'=>'80px'),
+            'buttons'=>array(
+                'statistic' => array(
+                    'label'=>'Statistic', // text label of the button
+                    'url'=>"CHtml::normalizeUrl(array('statistic', 'id'=>\$data->id))",
+                    'imageUrl'=>Yii::app()->baseUrl.'/images/chart.png',  // image URL of the button. If not set or false, a text link is used
+                    'options' => array('class'=>'statistic'), // HTML options for the button
+                ),
+            ),
             'viewDialogEnabled' => false,
             'updateDialogEnabled' => true,
             'updateDialog'=>array(
