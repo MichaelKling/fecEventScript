@@ -103,9 +103,16 @@ class Mission extends CActiveRecord
 		));
 	}
 
+    public function deleteAllSlots() {
+        foreach ($this->missionslotgroups as $missionslotgroup) {
+            $missionslotgroup->delete();
+        }
+    }
+
     public function delete(){
         Event::model()->updateAll(array('mission_id' => null),"mission_id = :id",array(':id' => $this->id));
         Server::model()->updateAll(array('mission_id' => null),"mission_id = :id",array(':id' => $this->id));
+        $this->deleteAllSlots();
         parent::delete();
     }
 }

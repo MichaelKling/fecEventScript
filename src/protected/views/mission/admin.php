@@ -89,7 +89,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
                 'actionParams' => array('id' => '$data->primaryKey'),
                 'dialogTitle' => Yii::t('model',"Bearbeiten"),
                 'dialogWidth' => 600,
-                'dialogHeight' => 300,
+                'dialogHeight' => 600,
                 'closeButtonText' => Yii::t('model',"Abbruch"),
                 'iframeHtmlOptions' => array('style' => "min-height:100%;background-color:#FFFFFF;")
             ),

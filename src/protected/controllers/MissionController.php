@@ -77,7 +77,19 @@ class MissionController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model=$this->loadModel($id);
+        $missionUploadForm=new MissionUploadForm();
+        $model=$this->loadModel($id);
+
+        if(isset($_POST['MissionUploadForm']))
+        {
+            $missionUploadForm->attributes=$_POST['MissionUploadForm'];
+            $missionUploadForm->missionFile=CUploadedFile::getInstance($missionUploadForm,'missionFile');
+            if($missionUploadForm->parseSlotInformations()) {
+                $this->redirect(array('view') + $_GET);
+            }
+        }
+
+
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -91,7 +103,7 @@ class MissionController extends Controller
             }
 		}
 
-        EQuickDlgs::render('update',array('model'=>$model));
+        EQuickDlgs::render('update',array('model'=>$model,'missionUploadForm' => $missionUploadForm));
 	}
 
 	/**
