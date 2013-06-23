@@ -16,3 +16,6 @@
 [submodule "src/protected/extensions/gameq2"]
 	path = src/protected/extensions/gameq2
 	url = git@github.com:Austinb/GameQ.git
+[submodule "src/protected/extensions/pboextractor"]
+	path = src/protected/extensions/pboextractor
+	url = git@github.com:MichaelKling/pboExtractor.git
