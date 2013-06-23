@@ -67,10 +67,6 @@ class MissionUploadForm extends CFormModel
             $sqmHandler = fopen($this->missionFile->getTempName(),'r');
         }
 
-
-
-
-
         if ($this->algorithm == MissionUploadForm::ALG_FAST) {
             Yii::import('ext.sqmparser.SQMFastParser');
             $sqmFile = SQMFastParser::parseStream($sqmHandler);
