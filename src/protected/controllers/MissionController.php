@@ -85,6 +85,7 @@ class MissionController extends Controller
             $missionUploadForm->attributes=$_POST['MissionUploadForm'];
             $missionUploadForm->missionFile=CUploadedFile::getInstance($missionUploadForm,'missionFile');
             if($missionUploadForm->parseSlotInformations()) {
+                //@TODO: Create Slots and Groups!
                 $this->redirect(array('view') + $_GET);
             }
         }
