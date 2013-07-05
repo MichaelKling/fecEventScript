@@ -19,3 +19,9 @@
 [submodule "src/protected/extensions/pboextractor"]
 	path = src/protected/extensions/pboextractor
 	url = git@github.com:MichaelKling/pboExtractor.git
+[submodule "src/protected/extensions/cpboExtractor"]
+	path = src/protected/extensions/cpboExtractor
+	url = git@github.com:MichaelKling/C-pboExtractor.git
+[submodule "src/protected/extensions/csqmparser"]
+	path = src/protected/extensions/csqmparser
+	url = git@github.com:MichaelKling/C-SQMParser.git

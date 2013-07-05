@@ -9,14 +9,14 @@ class MissionUploadForm extends CFormModel
 {
     const ALG_FAST = "fast";
     const ALG_SMALL = "small";
-
+    const ALG_C = "c";
 
     public $missionFile;
     public $algorithm;
     public function rules()
     {
         return array(
-            array('algorithm','in','range'=>array(MissionUploadForm::ALG_FAST,MissionUploadForm::ALG_SMALL),'allowEmpty'=>false),
+            array('algorithm','in','range'=>array(MissionUploadForm::ALG_FAST,MissionUploadForm::ALG_SMALL,MissionUploadForm::ALG_C),'allowEmpty'=>false),
             array('missionFile', 'file', 'types'=>'sqm, pbo'),
         );
     }
@@ -31,8 +31,9 @@ class MissionUploadForm extends CFormModel
 
     public function algorithmLabels() {
         return array(
-            MissionUploadForm::ALG_SMALL => Yii::t('model','Etwas langsamer Algorithmus, jedoch sehr Speicherfreundlich'),
-            MissionUploadForm::ALG_FAST => Yii::t('model','Schneller Algorithmus, jedoch sehr Speicherhungring'),
+            MissionUploadForm::ALG_SMALL => Yii::t('model','PHP - Etwas langsamer Algorithmus, jedoch sehr Speicherfreundlich'),
+            MissionUploadForm::ALG_FAST => Yii::t('model','PHP - Schneller Algorithmus, jedoch sehr Speicherhungring'),
+            MissionUploadForm::ALG_C => Yii::t('model','C - Algorithmus implementiert in C, sehr schnell.'),
         );
     }
 
@@ -54,29 +55,49 @@ class MissionUploadForm extends CFormModel
         }
         $fileType = $this->missionFile->getExtensionName();
 
-        $sqmHandler = null;
-        if ($fileType == "pbo") {
-            Yii::import('ext.pboextractor.PBOExtractor');
-            $pboFileEntry = PBOExtractor::extract("mission.sqm",$this->missionFile->getTempName());
-            $sqmHandler = $pboFileEntry->content;
-            if (!PBOExtractor::lastRunSuccesfull()) {
-                $this->addError("missionFile",PBOExtractor::getLastErrorMessage());
-                return false;
-            }
-        } else {
-            $sqmHandler = fopen($this->missionFile->getTempName(),'r');
-        }
+        if ($this->algorithm == MissionUploadForm::ALG_C) {
+            $fileLocation = $this->missionFile->getTempName();
+            if ($fileType == "pbo") {
+                $sqmFileLocation = $this->missionFile->getTempName().".sqm";
+                chdir('./protected/extensions/cpboExtractor');
+                $output = shell_exec('pboExtractor  --file "'.$fileLocation.'" --output "'.$sqmFileLocation.'" mission.sqm');
+                chdir('../../..');
 
+                $fileLocation = $sqmFileLocation;
+            }
+            $sqmHandler = fopen($fileLocation,'r');
+        } else {
+            $sqmHandler = null;
+            if ($fileType == "pbo") {
+                    Yii::import('ext.pboextractor.PBOExtractor');
+                    $pboFileEntry = PBOExtractor::extract("mission.sqm",$this->missionFile->getTempName());
+                    $sqmHandler = $pboFileEntry->content;
+                    if (!PBOExtractor::lastRunSuccesfull()) {
+                        $this->addError("missionFile",PBOExtractor::getLastErrorMessage());
+                        return false;
+                    }
+            } else {
+                $sqmHandler = fopen($this->missionFile->getTempName(),'r');
+            }
+        }
+/*
+        $output = shell_exec('ls -lart');
+        echo "<pre>$output</pre>";
+*/
         if ($this->algorithm == MissionUploadForm::ALG_FAST) {
             Yii::import('ext.sqmparser.SQMFastParser');
             $sqmFile = SQMFastParser::parseStream($sqmHandler);
-        } else {
+        } else if ($this->algorithm == MissionUploadForm::ALG_SMALL) {
             Yii::import('ext.sqmparser.SQMParser');
             $sqmFile = SQMParser::parseStream($sqmHandler);
+        } else {
+            Yii::import('ext.sqmparser.SQMFastParser');
+            $sqmFile = SQMFastParser::parseStream($sqmHandler);
         }
+
         $sqmFile->parse();
         $slots = $sqmFile->searchPlayableSlots(true);
-
+        unset($sqmFile);
 
         $then = microtime(true);
         $thenMemory = memory_get_usage();
