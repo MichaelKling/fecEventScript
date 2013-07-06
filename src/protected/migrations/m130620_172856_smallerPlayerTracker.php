@@ -9,7 +9,7 @@ class m130620_172856_smallerPlayerTracker extends CDbMigration
 		");
 
         $this->execute("
-			ALTER TABLE `playeractiveitem` DROP `name`;
+			ALTER TABLE `playerActiveItem` DROP `name`;
 		");
 	}
 
