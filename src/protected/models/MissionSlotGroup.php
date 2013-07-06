@@ -29,7 +29,7 @@ class MissionSlotGroup extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'missionslotgroup';
+		return 'missionSlotGroup';
 	}
 
 	/**
@@ -57,7 +57,7 @@ class MissionSlotGroup extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'missionslots' => array(self::HAS_MANY, 'Missionslot', 'missionSlotGroup_id'),
+			'missionslots' => array(self::HAS_MANY, 'MissionSlot', 'missionSlotGroup_id'),
 			'mission' => array(self::BELONGS_TO, 'Mission', 'mission_id'),
 		);
 	}

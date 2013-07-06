@@ -29,7 +29,7 @@ class SlotGroup extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'slotgroup';
+		return 'slotGroup';
 	}
 
 	/**

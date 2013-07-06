@@ -63,7 +63,7 @@ class Mission extends CActiveRecord
 			'events' => array(self::HAS_MANY, 'Event', 'mission_id'),
 			'missionslotgroups' => array(self::HAS_MANY, 'MissionSlotGroup', 'mission_id'),
             'slotcount' => array(self::STAT, 'MissionSlotGroup', 'mission_id',
-                           'join' => 'JOIN MissionSlot ON MissionSlot.MissionSlotGroup_id = t.id'),
+                           'join' => 'JOIN missionSlot ON missionSlot.missionSlotGroup_id = t.id'),
 			'servers' => array(self::HAS_MANY, 'Server', 'mission_id'),
 		);
 	}
