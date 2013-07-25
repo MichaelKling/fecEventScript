@@ -40,12 +40,13 @@ class MissionSlotGroup extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, mission_id', 'required'),
-			array('id, mission_id', 'numerical', 'integerOnly'=>true),
+			array('name, mission_id', 'required'),
+			array('mission_id, weight', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>45),
+            array( 'group', 'in', 'range' => MissionSlotGroupEnum::getValidValues() ),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, mission_id', 'safe', 'on'=>'search'),
+			array('id, name, mission_id, group, weight', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -88,6 +89,8 @@ class MissionSlotGroup extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('mission_id',$this->mission_id);
+        $criteria->compare('weight',$this->weight);
+        $criteria->compare('group',$this->group);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

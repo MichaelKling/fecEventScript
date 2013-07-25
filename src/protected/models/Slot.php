@@ -41,11 +41,11 @@ class Slot extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('name, slotGroup_id', 'required'),
-			array('slotGroup_id', 'numerical', 'integerOnly'=>true),
+			array('slotGroup_id, weight', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, slotGroup_id', 'safe', 'on'=>'search'),
+			array('id, name, slotGroup_id, weight', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -88,6 +88,7 @@ class Slot extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('slotGroup_id',$this->slotGroup_id);
+        $criteria->compare('weight',$this->weight);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
