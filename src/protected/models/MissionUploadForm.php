@@ -111,4 +111,43 @@ class MissionUploadForm extends CFormModel
 
         return $slots;
     }
+
+    public function saveSlotInformations($mission,$slotInformation) {
+        $mission->deleteAllSlots();
+        $groupWeightCounter = 0;
+        foreach ($slotInformation as $sideName => $side) {
+            foreach ($side as $squad) {
+                $group = new MissionSlotGroup();
+                $group->mission_id = $mission->getPrimaryKey();
+                $group->name = "1-1-".$squad['name'];
+                $group->group = $sideName;
+                $group->weight = $groupWeightCounter++;
+                if (!$group->save()) {
+                    throw new CHttpException(404,'Group could not be saved.'.CHtml::errorSummary($group));
+                }
+                $slotWeightCounter = 0;
+                foreach ($squad['slots'] as $player) {
+                    $slot = new MissionSlot();
+                    if ($player['description']) {
+                        $slot->name = ($player['groupId']+1).": ".$player['description'];
+                    } else {
+                        $slot->name = ($player['groupId']+1).": ".$player['classname']." [".$player['rankShortName']."]" ;
+                    }
+                    if ($player['position']) {
+                        $slot->name .= " ".$player['position'];
+                    }
+                    if ($player['isLeader']) {
+                        $slot->name .= " ".Yii::t("slots",", Anführer");
+                    }
+                    //Cutting string to database size
+                    $slot->name = substr($slot->name,0,45);
+                    $slot->missionSlotGroup_id = $group->getPrimaryKey();
+                    $slot->weight = $slotWeightCounter++;
+                    if (!$slot->save()) {
+                        throw new CHttpException(404,'Slot could not be saved.'.CHtml::errorSummary($slot));
+                    }
+                }
+            }
+        }
+    }
 }

@@ -7,6 +7,8 @@
  * @property integer $id
  * @property string $name
  * @property integer $mission_id
+ * @property integer $weight
+ * @property enum $group
  *
  * The followings are the available model relations:
  * @property Missionslot[] $missionslots
@@ -58,7 +60,7 @@ class MissionSlotGroup extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'missionslots' => array(self::HAS_MANY, 'Missionslot', 'missionSlotGroup_id'),
+			'missionslots' => array(self::HAS_MANY, 'Missionslot', 'missionSlotGroup_id', 'order'=>'Missionslot.weight ASC', 'alias' => 'Missionslot'),
 			'mission' => array(self::BELONGS_TO, 'Mission', 'mission_id'),
 		);
 	}
@@ -96,4 +98,15 @@ class MissionSlotGroup extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
+    public function deleteAllSlots() {
+        foreach ($this->missionslots as $missionslot) {
+            $missionslot->delete();
+        }
+    }
+
+    public function delete(){
+        $this->deleteAllSlots();
+        parent::delete();
+    }
 }

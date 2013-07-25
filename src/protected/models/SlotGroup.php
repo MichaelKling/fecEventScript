@@ -7,6 +7,8 @@
  * @property integer $id
  * @property string $name
  * @property integer $event_id
+ * @property integer $weight
+ * @property enum $group
  *
  * The followings are the available model relations:
  * @property Slot[] $slots
@@ -96,4 +98,15 @@ class SlotGroup extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
+    public function deleteAllSlots() {
+        foreach ($this->slots as $slot) {
+            $slot->delete();
+        }
+    }
+
+    public function delete(){
+        $this->deleteAllSlots();
+        parent::delete();
+    }
 }

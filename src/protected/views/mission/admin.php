@@ -88,7 +88,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
                 'controllerRoute' => 'mission/update',
                 'actionParams' => array('id' => '$data->primaryKey'),
                 'dialogTitle' => Yii::t('model',"Bearbeiten"),
-                'dialogWidth' => 600,
+                'dialogWidth' => 700,
                 'dialogHeight' => 600,
                 'closeButtonText' => Yii::t('model',"Abbruch"),
                 'iframeHtmlOptions' => array('style' => "min-height:100%;background-color:#FFFFFF;")
@@ -100,8 +100,8 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
     array(
         'controllerRoute' => 'create',
         'dialogTitle' => Yii::t('model','Erstelle neue Mission'),
-        'dialogWidth' => 600,
-        'dialogHeight' => 300,
+        'dialogWidth' => 700,
+        'dialogHeight' => 600,
         'openButtonText' => Yii::t('model','Erstelle neue Mission'),
         'closeButtonText' => Yii::t('model','Abbruch'),
         'closeOnAction' => true, //important to invoke the close action in the actionCreate

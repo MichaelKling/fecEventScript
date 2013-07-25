@@ -20,6 +20,7 @@ return array(
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
+        'application.components.enums.*',
         'application.modules.acl.components.*',
         'application.modules.acl.models.*',
         'ext.quickdlgs.*',

@@ -7,6 +7,7 @@
  * @property integer $id
  * @property string $name
  * @property integer $missionSlotGroup_id
+ * @property integer $weight
  *
  * The followings are the available model relations:
  * @property Missionslotgroup $missionSlotGroup
