@@ -58,9 +58,9 @@ class Member extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'playeractiveitems' => array(self::HAS_MANY, 'Playeractiveitem', 'member_id'),
+			'playeractiveitems' => array(self::HAS_MANY, 'PlayerActiveItem', 'member_id'),
 			'registrations' => array(self::HAS_MANY, 'Registration', 'member_id'),
-            'totalplaytime' => array(self::STAT, 'ServerInfo', 'playeractiveitem(member_id, serverInfo_id)',
+            'totalplaytime' => array(self::STAT, 'ServerInfo', 'playerActiveItem(member_id, serverInfo_id)',
                                                  'select' => 'SUM(timeframe)'),
 		);
 	}

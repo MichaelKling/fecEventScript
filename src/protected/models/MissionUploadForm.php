@@ -56,16 +56,17 @@ class MissionUploadForm extends CFormModel
         $fileType = $this->missionFile->getExtensionName();
 
         if ($this->algorithm == MissionUploadForm::ALG_C) {
+            chdir('./protected/extensions');
+            $output = "";
             $fileLocation = $this->missionFile->getTempName();
             if ($fileType == "pbo") {
-                $sqmFileLocation = $this->missionFile->getTempName().".sqm";
-                chdir('./protected/extensions/cpboExtractor');
-                $output = shell_exec('pboExtractor  --file "'.$fileLocation.'" --output "'.$sqmFileLocation.'" mission.sqm');
-                chdir('../../..');
-
-                $fileLocation = $sqmFileLocation;
+                $output = shell_exec('./cpboExtractor/pboExtractor  --file "'.$fileLocation.'"  mission.sqm | ./csqmparser/sqmParser');
+            } else {                
+                $output = shell_exec('./csqmparser/sqmParser --file "'.$fileLocation.'"');                       
             }
-            $sqmHandler = fopen($fileLocation,'r');
+            chdir('../..');        
+            
+            $slots = eval($output);
         } else {
             $sqmHandler = null;
             if ($fileType == "pbo") {
@@ -79,25 +80,23 @@ class MissionUploadForm extends CFormModel
             } else {
                 $sqmHandler = fopen($this->missionFile->getTempName(),'r');
             }
-        }
-/*
-        $output = shell_exec('ls -lart');
-        echo "<pre>$output</pre>";
-*/
-        if ($this->algorithm == MissionUploadForm::ALG_FAST) {
-            Yii::import('ext.sqmparser.SQMFastParser');
-            $sqmFile = SQMFastParser::parseStream($sqmHandler);
-        } else if ($this->algorithm == MissionUploadForm::ALG_SMALL) {
-            Yii::import('ext.sqmparser.SQMParser');
-            $sqmFile = SQMParser::parseStream($sqmHandler);
-        } else {
-            Yii::import('ext.sqmparser.SQMFastParser');
-            $sqmFile = SQMFastParser::parseStream($sqmHandler);
-        }
+            
+            if ($this->algorithm == MissionUploadForm::ALG_FAST) {
+                Yii::import('ext.sqmparser.SQMFastParser');
+                $sqmFile = SQMFastParser::parseStream($sqmHandler);
+            } else if ($this->algorithm == MissionUploadForm::ALG_SMALL) {
+                Yii::import('ext.sqmparser.SQMParser');
+                $sqmFile = SQMParser::parseStream($sqmHandler);
+            } else {
+                Yii::import('ext.sqmparser.SQMFastParser');
+                $sqmFile = SQMFastParser::parseStream($sqmHandler);
+            }
 
-        $sqmFile->parse();
-        $slots = $sqmFile->searchPlayableSlots(true);
-        unset($sqmFile);
+            $sqmFile->parse();
+            $slots = $sqmFile->searchPlayableSlots(true);
+            unset($sqmFile);     
+
+        }
 
         $then = microtime(true);
         $thenMemory = memory_get_usage();

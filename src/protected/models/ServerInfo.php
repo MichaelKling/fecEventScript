@@ -30,7 +30,7 @@ class ServerInfo extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'serverinfo';
+		return 'serverInfo';
 	}
 
     public function behaviors()

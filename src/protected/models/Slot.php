@@ -59,7 +59,7 @@ class Slot extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'registrations' => array(self::HAS_MANY, 'Registration', 'slot_id'),
-			'slotGroup' => array(self::BELONGS_TO, 'Slotgroup', 'slotGroup_id'),
+			'slotGroup' => array(self::BELONGS_TO, 'SlotGroup', 'slotGroup_id'),
 		);
 	}
 

@@ -7,4 +7,5 @@
 /src/files/uploads
 /src/uploads
 /src/resize
-
+/nbproject
+/nbproject/private/

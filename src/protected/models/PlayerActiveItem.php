@@ -32,7 +32,7 @@ class PlayerActiveItem extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'playeractiveitem';
+		return 'playerActiveItem';
 	}
 
     public function behaviors()
