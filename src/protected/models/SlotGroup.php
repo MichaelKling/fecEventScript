@@ -7,6 +7,8 @@
  * @property integer $id
  * @property string $name
  * @property integer $event_id
+ * @property integer $weight
+ * @property enum $group
  *
  * The followings are the available model relations:
  * @property Slot[] $slots
@@ -41,11 +43,12 @@ class SlotGroup extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('name, event_id', 'required'),
-			array('event_id', 'numerical', 'integerOnly'=>true),
+			array('event_id, weight', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>45),
+            array( 'group', 'in', 'range' => SlotGroupEnum::getValidValues() ),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, event_id', 'safe', 'on'=>'search'),
+			array('id, name, event_id, weight, group', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -88,9 +91,22 @@ class SlotGroup extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('event_id',$this->event_id);
+        $criteria->compare('weight',$this->weight);
+        $criteria->compare('group',$this->group);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
+
+    public function deleteAllSlots() {
+        foreach ($this->slots as $slot) {
+            $slot->delete();
+        }
+    }
+
+    public function delete(){
+        $this->deleteAllSlots();
+        parent::delete();
+    }
 }

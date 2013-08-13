@@ -61,7 +61,7 @@ class Mission extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'events' => array(self::HAS_MANY, 'Event', 'mission_id'),
-			'missionslotgroups' => array(self::HAS_MANY, 'MissionSlotGroup', 'mission_id'),
+			'missionslotgroups' => array(self::HAS_MANY, 'MissionSlotGroup', 'mission_id', 'order'=>'MissionSlotGroup.weight ASC', 'alias' => 'MissionSlotGroup'),
             'slotcount' => array(self::STAT, 'MissionSlotGroup', 'mission_id',
                            'join' => 'JOIN missionSlot ON missionSlot.missionSlotGroup_id = t.id'),
 			'servers' => array(self::HAS_MANY, 'Server', 'mission_id'),

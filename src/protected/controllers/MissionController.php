@@ -62,8 +62,8 @@ class MissionController extends Controller
 		{
 			$model->attributes=$_POST['Mission'];
             if($model->save()) {
-                EQuickDlgs::checkDialogJsScript();
-                $this->redirect(array('view','id'=>$model->id));
+                //Redirecting to update to immediatly upload stuff.
+                $this->redirect(array('update','id'=>$model->id) + $_GET);
             }
 		}
 
@@ -77,34 +77,49 @@ class MissionController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
+        $saving = false;
+
         $missionUploadForm=new MissionUploadForm();
+        $missionSlotEditForm=new SlotForm();
         $model=$this->loadModel($id);
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($model);
+
+        if(isset($_POST['Mission']))
+        {
+            $model->attributes=$_POST['Mission'];
+            if($model->save()) {
+                $saving = true;
+            }
+        }
 
         if(isset($_POST['MissionUploadForm']))
         {
             $missionUploadForm->attributes=$_POST['MissionUploadForm'];
-            $missionUploadForm->missionFile=CUploadedFile::getInstance($missionUploadForm,'missionFile');
-            if($missionUploadForm->parseSlotInformations()) {
-                //@TODO: Create Slots and Groups!
-                $this->redirect(array('view') + $_GET);
+            $uploadedFile = CUploadedFile::getInstance($missionUploadForm,'missionFile');
+            $missionUploadForm->missionFile=$uploadedFile;
+            if($result = $missionUploadForm->parseSlotInformations()) {
+                $missionUploadForm->saveSlotInformations($model,$result);
+
+                $model->filename = $uploadedFile->name;
+                $model->filehash = sha1_file($uploadedFile->getTempName());
+                $model->save();
+                $saving = true;
             }
         }
 
+        if (isset($_POST['SlotForm']))
+        {
+            $missionSlotEditForm->attributes=$_POST['SlotForm'];
+            $missionSlotEditForm->saveSlotInformations($model);
+            $saving = true;
+        }
 
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['Mission']))
-		{
-			$model->attributes=$_POST['Mission'];
-            if($model->save()) {
-                EQuickDlgs::checkDialogJsScript();
-                $this->redirect(array('view','id'=>$model->id));
-            }
-		}
-
-        EQuickDlgs::render('update',array('model'=>$model,'missionUploadForm' => $missionUploadForm));
+        if ($saving) {
+            EQuickDlgs::checkDialogJsScript();
+            $this->redirect(array('view','id'=>$model->id));
+        }
+        EQuickDlgs::render('update',array('model'=>$model,'missionUploadForm' => $missionUploadForm, 'missionSlotEditForm' => $missionSlotEditForm));
 	}
 
 	/**
@@ -154,7 +169,7 @@ class MissionController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=Mission::model()->findByPk($id);
+		$model=Mission::model()->with(array('missionslotgroups','missionslotgroups.missionslots'))->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;

@@ -7,6 +7,7 @@
  * @property integer $id
  * @property string $name
  * @property integer $missionSlotGroup_id
+ * @property integer $weight
  *
  * The followings are the available model relations:
  * @property Missionslotgroup $missionSlotGroup
@@ -39,8 +40,8 @@ class MissionSlot extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, missionSlotGroup_id', 'required'),
-			array('id, missionSlotGroup_id', 'numerical', 'integerOnly'=>true),
+			array('name, missionSlotGroup_id', 'required'),
+			array('missionSlotGroup_id', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>45),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
@@ -86,6 +87,7 @@ class MissionSlot extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('missionSlotGroup_id',$this->missionSlotGroup_id);
+        $criteria->compare('weight',$this->weight);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

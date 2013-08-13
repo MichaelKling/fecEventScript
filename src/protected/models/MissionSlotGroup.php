@@ -7,6 +7,8 @@
  * @property integer $id
  * @property string $name
  * @property integer $mission_id
+ * @property integer $weight
+ * @property enum $group
  *
  * The followings are the available model relations:
  * @property Missionslot[] $missionslots
@@ -40,12 +42,13 @@ class MissionSlotGroup extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, mission_id', 'required'),
-			array('id, mission_id', 'numerical', 'integerOnly'=>true),
+			array('name, mission_id', 'required'),
+			array('mission_id, weight', 'numerical', 'integerOnly'=>true),
 			array('name', 'length', 'max'=>45),
+            array( 'group', 'in', 'range' => MissionSlotGroupEnum::getValidValues() ),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, mission_id', 'safe', 'on'=>'search'),
+			array('id, name, mission_id, group, weight', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,7 +60,7 @@ class MissionSlotGroup extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'missionslots' => array(self::HAS_MANY, 'MissionSlot', 'missionSlotGroup_id'),
+			'missionslots' => array(self::HAS_MANY, 'MissionSlot', 'missionSlotGroup_id', 'order'=>'MissionSlot.weight ASC', 'alias' => 'MissionSlot'),
 			'mission' => array(self::BELONGS_TO, 'Mission', 'mission_id'),
 		);
 	}
@@ -88,9 +91,22 @@ class MissionSlotGroup extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
 		$criteria->compare('mission_id',$this->mission_id);
+        $criteria->compare('weight',$this->weight);
+        $criteria->compare('group',$this->group);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
+
+    public function deleteAllSlots() {
+        foreach ($this->missionslots as $missionslot) {
+            $missionslot->delete();
+        }
+    }
+
+    public function delete(){
+        $this->deleteAllSlots();
+        parent::delete();
+    }
 }
