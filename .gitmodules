@@ -27,7 +27,7 @@
 	url = git@github.com:MichaelKling/C-SQMParser.git
 [submodule "src/protected/modules/user"]
 	path = src/protected/modules/user
-	url = git@github.com:mishamx/yii-user.git
+	url = git@github.com:MichaelKling/yii-user-for-fec.git
 [submodule "src/protected/extensions/hoauth"]
 	path = src/protected/extensions/hoauth
 	url = git@github.com:SleepWalker/hoauth.git
