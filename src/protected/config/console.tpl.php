@@ -27,6 +27,18 @@ return array(
 					'levels'=>'error, warning',
 				),
 			),
+		),      
+		'user'=>array(
+            'hash' => 'crypt',
+            'sendActivationMail' => true,
+            'loginNotActiv' => false,
+            'activeAfterRegister' => false,
+            'autoLogin' => true,
+            'registrationUrl' => array('/user/registration'),
+            'recoveryUrl' => array('/user/recovery'),
+            'loginUrl' => array('/user/login'),
+            'returnUrl' => array('/user/profile'),
+            'returnLogoutUrl' => array('/user/login'),
 		),
 	),
 );

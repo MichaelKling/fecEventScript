@@ -23,6 +23,8 @@ return array(
         'application.components.enums.*',
         'application.modules.acl.components.*',
         'application.modules.acl.models.*',
+        'application.modules.user.models.*',
+        'application.modules.user.components.*',
         'ext.quickdlgs.*',
         'editable.*',
 	),
@@ -35,13 +37,25 @@ return array(
 			'password'=>'Enter Your Password Here',
 			// If removed, Gii defaults to localhost only. Edit carefully to taste.
 			'ipFilters'=>array('127.0.0.1','::1'),
-		),*/
+		),*/        
+		'user'=>array(
+            'hash' => 'crypt',
+            'sendActivationMail' => true,
+            'loginNotActiv' => false,
+            'activeAfterRegister' => false,
+            'autoLogin' => true,
+            'registrationUrl' => array('/user/registration'),
+            'recoveryUrl' => array('/user/recovery'),
+            'loginUrl' => array('/user/login'),
+            'returnUrl' => array('/user/profile'),
+            'returnLogoutUrl' => array('/user/login'),
+		),
 	),
 
 	// application components
 	'components'=>array(
 		'user'=>array(
-			// enable cookie-based authentication
+			'class' => 'WebUser',
 			'allowAutoLogin'=>true,
 		),
 		// uncomment the following to enable URLs in path-format

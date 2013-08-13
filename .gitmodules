@@ -25,8 +25,8 @@
 [submodule "src/protected/extensions/csqmparser"]
 	path = src/protected/extensions/csqmparser
 	url = git@github.com:MichaelKling/C-SQMParser.git
-[submodule "src/protected/user"]
-	path = src/protected/user
+[submodule "src/protected/modules/user"]
+	path = src/protected/modules/user
 	url = git@github.com:mishamx/yii-user.git
 [submodule "src/protected/extensions/hoauth"]
 	path = src/protected/extensions/hoauth
