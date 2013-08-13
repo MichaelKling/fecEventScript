@@ -28,7 +28,7 @@
         ));
         $this->widget('zii.widgets.CMenu', array(
             'items'=>array(
-                array('label'=>'Administratoren', 'url'=>array('/administrator/admin')),
+                array('label'=>'User', 'url'=>array('/user/admin')),
                 array('label'=>'Server', 'url'=>array('/server/admin')),
                 array('label'=>'Addons', 'url'=>array('/addon/admin')),
                 array('label'=>'Missions', 'url'=>array('/mission/admin')),

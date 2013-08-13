@@ -8,6 +8,21 @@ return array(
 
 	// preloading 'log' component
 	'preload'=>array('log'),
+    
+    'modules'=>array(  
+		'user'=>array(
+            'hash' => 'ripemd160',
+            'sendActivationMail' => true,
+            'loginNotActiv' => false,
+            'activeAfterRegister' => false,
+            'autoLogin' => true,
+            'registrationUrl' => array('/user/registration'),
+            'recoveryUrl' => array('/user/recovery'),
+            'loginUrl' => array('/user/login'),
+            'returnUrl' => array('/user/profile'),
+            'returnLogoutUrl' => array('/user/login'),
+		),
+	),             
 
 	// application components
 	'components'=>array(
@@ -27,18 +42,10 @@ return array(
 					'levels'=>'error, warning',
 				),
 			),
-		),      
+		),   
 		'user'=>array(
-            'hash' => 'crypt',
-            'sendActivationMail' => true,
-            'loginNotActiv' => false,
-            'activeAfterRegister' => false,
-            'autoLogin' => true,
-            'registrationUrl' => array('/user/registration'),
-            'recoveryUrl' => array('/user/recovery'),
-            'loginUrl' => array('/user/login'),
-            'returnUrl' => array('/user/profile'),
-            'returnLogoutUrl' => array('/user/login'),
-		),
+            'class' => 'WebUser',
+            'allowAutoLogin'=>true,
+		), 
 	),
 );

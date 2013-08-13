@@ -39,7 +39,7 @@ return array(
 			'ipFilters'=>array('127.0.0.1','::1'),
 		),*/        
 		'user'=>array(
-            'hash' => 'crypt',
+            'hash' => 'ripemd160',
             'sendActivationMail' => true,
             'loginNotActiv' => false,
             'activeAfterRegister' => false,
