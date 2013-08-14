@@ -27,3 +27,20 @@ $this->menu=array(
 		'access',        
 	),
 )); ?>
+
+
+<?php
+
+ Yii::import("ext.yii-acl-visualisation.components.*");
+ Yii::import("ext.yii-graphviz.components.*");
+ Yii::import("ext.yii-graphviz.widgets.*");
+
+ $inspector = new ACLInspector();
+ $relations = $inspector->getFullRelations();
+ $syntax = $inspector->createGraphvizSyntax($relations);
+
+ $this->widget('ext.yii-graphviz.widgets.Graph', array(
+    'configuration'=>$syntax,
+));
+
+?>

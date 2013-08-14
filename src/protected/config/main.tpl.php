@@ -31,7 +31,6 @@ return array(
 	),
 
 	'modules'=>array(
-        'acl',
 		// uncomment the following to enable the Gii tool
 		/*'gii'=>array(
 			'class'=>'system.gii.GiiModule',
@@ -51,6 +50,37 @@ return array(
             'returnUrl' => array('/user/profile'),
             'returnLogoutUrl' => array('/user/login'),
 		),
+        'acl'=>array(
+            'strategy_config' => array(
+                'prefix' => 'Pm',
+                'strictMode' => false,
+                'guestGroup' => 'Guest',
+                'virtualObjects' => array(),
+                'virtualObjectPattern' => '{ident}_virtual',
+                'virtualObjectCallback' => NULL,
+                'enableBusinessRules' => false,
+                'lookupBusinessRules' => 'all',
+                'enablePermissionChangeRestriction' => false,
+                'enableSpecificPermissionChangeRestriction' => false,
+                'enableRelationChangeRestriction' => false,
+                'generalPermissions' => array('create'),
+                'autoPermissions' => '*',
+                'enableGeneralPermissions' => false,
+                'autoJoinGroups' => array(
+                    'aro' => array('All'),
+                    'aco' => array('All')
+                ),
+                'caching' => array(
+                  'collection' => 0,
+                  'action'     => 0,
+                  'permission' => 0,
+                  'aclObject' => 0,
+                  'aroObject' => 0,
+                  'structureCache' => 0,
+                  'cacheComponent' => 'cache'
+                ),
+            ),    
+        ),
 	),
 
 	// application components

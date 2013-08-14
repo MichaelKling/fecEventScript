@@ -31,3 +31,9 @@
 [submodule "src/protected/extensions/hoauth"]
 	path = src/protected/extensions/hoauth
 	url = git@github.com:SleepWalker/hoauth.git
+[submodule "src/protected/extensions/yii-graphviz"]
+	path = src/protected/extensions/yii-graphviz
+	url = git@github.com:ascendro/yii-graphviz.git
+[submodule "src/protected/extensions/yii-acl-visualisation"]
+	path = src/protected/extensions/yii-acl-visualisation
+	url = git@github.com:ascendro/yii-acl-visualisation.git
