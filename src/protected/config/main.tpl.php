@@ -22,6 +22,7 @@ return array(
 		'application.components.*',
         'application.components.enums.*',
         'application.modules.acl.components.*',
+        'application.modules.acl.models.behaviors.*',
         'application.modules.acl.models.*',
         'application.modules.user.models.*',
         'application.modules.user.components.*',
